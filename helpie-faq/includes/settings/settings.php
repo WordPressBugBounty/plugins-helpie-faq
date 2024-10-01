@@ -475,7 +475,7 @@ if (!class_exists('\HelpieFaq\Includes\Settings\Settings')) {
                 'title' => __('Ask Question Button Text', 'helpie-faq'),
                 'subtitle' => $is_premium == false ? $pro_feature_sub_title : '',
                 'class' => $is_premium == false ? 'helpie-disabled' : '',
-                'default' => 'Add FAQ',
+                'default' => __('Add FAQ', 'helpie-faq'),
             );
             if ($is_premium == false) {
                 $options[$incr]['attributes']['disabled'] = true;

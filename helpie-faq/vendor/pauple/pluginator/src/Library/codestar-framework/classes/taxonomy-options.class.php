@@ -130,6 +130,8 @@ if ( ! class_exists( 'CSF_Taxonomy_Options' ) ) {
           if ( ! empty( $section['fields'] ) ) {
             foreach ( $section['fields'] as $field ) {
 
+              # error_log('render_taxonomy_form_fields field: ' . print_r($field, true));
+
               if ( ! empty( $field['id'] ) && ! empty( $errors['fields'][$field['id']] ) ) {
                 $field['_error'] = $errors['fields'][$field['id']];
               }
@@ -138,7 +140,11 @@ if ( ! class_exists( 'CSF_Taxonomy_Options' ) ) {
                 $field['default'] = $this->get_default( $field );
               }
 
-              CSF::field( $field, $this->get_meta_value( $field, $term_id ), $this->unique, 'taxonomy' );
+              $meta_value = $this->get_meta_value( $field, $term_id );
+              # error_log('before escapemeta_value: ' . print_r($meta_value, true));
+              $meta_value = $this->escape_meta_value($meta_value);
+              // error_log('meta_value: ' . print_r($meta_value, true));
+              CSF::field( $field, $meta_value, $this->unique, 'taxonomy' );
 
             }
           }
@@ -150,8 +156,62 @@ if ( ! class_exists( 'CSF_Taxonomy_Options' ) ) {
 
     }
 
+    public function escape_meta_value($meta_value) {
+       // error_log('meta_value: ' . print_r($meta_value, true));
+
+       if(empty($meta_value) || is_null($meta_value)) {
+        return $meta_value;
+      }
+      
+      foreach ($meta_value as $key => $value) {
+        if (is_array($value)) {
+
+          $title = $value['faq_item']['title'];
+          // error_log('title: ' . $title);
+
+          $title = html_entity_decode($title);
+          $content = html_entity_decode($value['faq_item']['content']);
+          // $title = strip_tags($title);
+          // $title = esc_attr($title);
+          // error_log('sanitized title: ' . $title);
+          $title = hfaq_safe_kses($title);
+          $content = hfaq_safe_kses($content);
+          // error_log('hfaq_safe_kses title: ' . $title);
+          // error_log('hfaq_safe_kses content: ' . $content);
+          $meta_value[$key]['faq_item']['title'] = $title;
+          $meta_value[$key]['faq_item']['content'] = $content;
+        } else {
+          $value = html_entity_decode($value);
+          $value = hfaq_safe_kses($value);
+        }
+      }
+      return $meta_value;
+    }
+
+    public function recursive_field_sanitize_validate($field, $request) {
+
+      // error_log('recursive_field_sanitize_validate called');
+
+      if (is_array($field)) {
+        foreach ($field as $key => &$value) {
+
+          if(is_array($value)) {
+            $value = $this->recursive_field_sanitize_validate($value, $request);
+          } else {
+            error_log('key: ' . $key);
+            $value = wp_kses_post($value);
+            # error_log('value: ' . print_r($value, true));
+          }
+        }
+      }
+
+      return $field;
+    }
+
     // save taxonomy form fields
     public function save_taxonomy( $term_id ) {
+
+      # error_log('save_taxonomy called');
 
       $count    = 1;
       $data     = array();
@@ -175,6 +235,10 @@ if ( ! class_exists( 'CSF_Taxonomy_Options' ) ) {
           if ( ! empty( $section['fields'] ) ) {
 
             foreach ( $section['fields'] as $field ) {
+
+              # error_log('taxonomy field: ' . print_r($field, true));
+
+              $field = $this->recursive_field_sanitize_validate($field, $request);
 
               if ( ! empty( $field['id'] ) ) {
 

@@ -38,7 +38,7 @@ if (!class_exists('\HelpieFaq\Includes\Tracking\Dispatcher')) {
                 'test' => 0,
                 'api_key' => $this->api_secret,
                 'track_id' => uniqid(),
-                'data' => base64_encode(json_encode($event)),
+                'data' => base64_encode(wp_json_encode($event)),
             );
 
             $url .= '?' . http_build_query($params);

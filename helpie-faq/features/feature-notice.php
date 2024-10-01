@@ -41,17 +41,17 @@ if (!class_exists('\HelpieFaq\Features\Feature_Notice')) {
         public function print_feature_notice()
         {
             global $pluginator_security_agent;
-            $html = '<div class="helpiefaq-notice helpiefaq-notice--feature notice is-dismissible">';
+            echo '<div class="helpiefaq-notice helpiefaq-notice--feature notice is-dismissible">';
 
-            $html .= '<img class="helpiefaq-notice__logo helpiefaq-notice__logo--small" src="' . HELPIE_FAQ_URL . '/assets/img/helpie_faq-logo.png" alt="Helpie FAQ Logo">';
+            echo '<img class="helpiefaq-notice__logo helpiefaq-notice__logo--small" src="' . esc_url(HELPIE_FAQ_URL . '/assets/img/helpie_faq-logo.png') . '" alt="Helpie FAQ Logo">';
             // content
-            $html .= '<div class="helpiefaq-notice__body">';
-            $html .= '<span class="helpiefaq-notice__content">What\'s new in Helpie FAQ:</span> ' . $this->get_content();
-            $html .= '</div>';
+            echo '<div class="helpiefaq-notice__body">';
+            echo '<span class="helpiefaq-notice__content">What\'s new in Helpie FAQ:</span> ';
+            hfaq_safe_echo($this->get_content());
+            echo '</div>';
 
-            $html .= '<a role="button" class="notice-dismiss helpiefaq-no-underline" href="' . $pluginator_security_agent->add_query_arg(array('helpie_faq_feature_notice_dismissed' => 'true')) . '"></a>';
-            $html .= '</div>';
-            echo $html;
+            echo '<a role="button" class="notice-dismiss helpiefaq-no-underline" href="' . $pluginator_security_agent->add_query_arg(array('helpie_faq_feature_notice_dismissed' => 'true')) . '"></a>';
+            echo '</div>';
         }
 
         public function get_content()
@@ -63,7 +63,7 @@ if (!class_exists('\HelpieFaq\Features\Feature_Notice')) {
 
         public function click_handler()
         {
-            $notice_dismissed = isset($_GET['helpie_faq_feature_notice_dismissed']) ? $_GET['helpie_faq_feature_notice_dismissed'] : false;
+            $notice_dismissed = isset($_GET['helpie_faq_feature_notice_dismissed']) ? sanitize_text_field(wp_unslash($_GET['helpie_faq_feature_notice_dismissed'])) : false;
 
             if ($notice_dismissed) {
                 update_option($this->dismissed_option_name, HELPIE_FAQ_VERSION);
@@ -76,7 +76,7 @@ if (!class_exists('\HelpieFaq\Features\Feature_Notice')) {
         public function redirect_to($url)
         {
             echo "<script type='text/javascript'>
-                let url = '" . $url . "';
+                let url = '" . esc_url($url) . "';
                 window.location.href = url;
             </script>";
         }

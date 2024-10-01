@@ -467,3 +467,16 @@ msgstr "Rispondi"
 
 msgid "Submit"
 msgstr "Invia"
+
+# PAGINATION
+msgid "Next"
+msgstr "Successivo"
+
+msgid "Previous"
+msgstr "Precedente"
+
+msgid "First"
+msgstr "Primo"
+
+msgid "Last"
+msgstr "Ultimo"

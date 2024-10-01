@@ -464,3 +464,19 @@ msgstr "Answer"
 
 msgid "Submit"
 msgstr "Submit"
+
+# Pagination
+msgid "Next"
+msgstr "Next"
+
+msgid "Previous"
+msgstr "Previous"
+
+msgid "Page"
+msgstr "Page"
+
+msgid "First"
+msgstr "First"
+
+msgid "Last"
+msgstr "Last"

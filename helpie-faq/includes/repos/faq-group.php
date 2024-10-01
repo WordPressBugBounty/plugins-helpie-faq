@@ -361,7 +361,7 @@ if ( !class_exists( '\\HelpieFaq\\Includes\\Repos\\Faq_Group' ) ) {
                 "sortby",
                 "order"
             ];
-            $original_settings_data = ( isset( $_REQUEST['faq_group_setting_fields_object'] ) ? json_decode( stripslashes( $_REQUEST['faq_group_setting_fields_object'] ), true ) : [] );
+            $original_settings_data = ( isset( $_REQUEST['faq_group_setting_fields_object'] ) ? json_decode( sanitize_text_field( wp_unslash( $_REQUEST['faq_group_setting_fields_object'] ) ), true ) : [] );
             $settings_data = [];
             if ( isset( $original_settings_data['fields'] ) && !empty( $original_settings_data['fields'] ) ) {
                 $settings_data['fields'] = array_filter( $original_settings_data['fields'], function ( $key ) use($free_allowed_fields) {

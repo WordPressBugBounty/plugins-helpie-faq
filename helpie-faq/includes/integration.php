@@ -26,7 +26,8 @@ if (!class_exists('\HelpieFaq\Includes\Integration')) {
         private function get_all_group_settings()
         {
 
-            $terms = get_terms('helpie_faq_group', array(
+            $terms = get_terms(array(
+                'taxonomy' => 'helpie_faq_group',
                 'hide_empty' => false,
             ));
 

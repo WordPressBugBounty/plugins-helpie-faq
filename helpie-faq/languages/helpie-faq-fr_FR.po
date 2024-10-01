@@ -469,3 +469,19 @@ msgstr "Répondre"
 
 msgid "Submit"
 msgstr "Soumettre"
+
+# PAGINATION
+msgid "Next"
+msgstr "Suivant"
+
+msgid "Previous"
+msgstr "Précédent"
+
+msgid "Page"
+msgstr "Page"
+
+msgid "First"
+msgstr "Premier"
+
+msgid "Last"
+msgstr "Dernier"

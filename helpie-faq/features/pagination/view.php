@@ -24,11 +24,11 @@ if (!class_exists('\HelpieFaq\Features\Pagination\View')) {
             $html .= "<div class='helpie-faq__pagination $position_class' >";
             $html .= '<ul class="helpie-faq__pagination__list">';
 
-            $html .= $this->get_page_link(array("page" => 0, "label" => "First"));
-            $html .= $this->get_page_link(array("page" => "PREV", "label" => "Previous"));
+            $html .= $this->get_page_link(array("page" => 0, "label" => __('First', 'helpie-faq')));
+            $html .= $this->get_page_link(array("page" => "PREV", "label" => __('Previous', 'helpie-faq')));
             $html .= $this->get_pages_links($total_no_of_pages);
-            $html .= $this->get_page_link(array("page" => "NEXT", "label" => "Next"));
-            $html .= $this->get_page_link(array("page" => $total_no_of_pages, "label" => "Last"));
+            $html .= $this->get_page_link(array("page" => "NEXT", "label" => __('Next', 'helpie-faq')));
+            $html .= $this->get_page_link(array("page" => $total_no_of_pages, "label" => __('Last', 'helpie-faq')));
 
             $html .= '</ul>';
             $html .= '<div class="helpie-faq__spinner"><div class="helpie-faq__loader"></div></div>';

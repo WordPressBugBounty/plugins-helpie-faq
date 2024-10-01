@@ -108,7 +108,8 @@ if (!class_exists('\HelpieFaq\Includes\Modules\Faq_Rest_Api\Faq_Rest_Api')) {
         public function get_terms_endFunction($params)
         {
             $taxonomy = $params['taxonomy'] ? $params['taxonomy'] : 'categories';
-            $terms = get_terms($taxonomy, array(
+            $terms = get_terms(array(
+                'taxonomy' => $taxonomy,
                 'hide_empty' => false,
             ));
 

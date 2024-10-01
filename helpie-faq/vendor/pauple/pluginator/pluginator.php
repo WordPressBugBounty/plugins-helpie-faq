@@ -7,7 +7,7 @@ Version: 0.3.0
 
  */
 
-define('PLUGINATOR_VERSION', '0.2.9');
+define('PLUGINATOR_VERSION', '0.3.0');
 define('PLUGINATOR__FILE__', __FILE__);
 define('PLUGINATOR_PATH', dirname(PLUGINATOR__FILE__));
 define('PLUGINATOR_SRC_PATH', dirname(PLUGINATOR__FILE__) . '/src');

@@ -105,6 +105,7 @@ if ( !class_exists( '\\HelpieFaq\\Includes\\Repos\\Faq_Repo' ) ) {
             $category_sortby = ( isset( $args['category_sortby'] ) ? $args['category_sortby'] : '' );
             $category_order = ( isset( $args['category_order'] ) ? $args['category_order'] : 'desc' );
             $term_args = array(
+                'taxonomy'   => 'helpie_faq_category',
                 'parent'     => 0,
                 'hide_empty' => false,
                 'orderby'    => 'term_id',
@@ -125,8 +126,9 @@ if ( !class_exists( '\\HelpieFaq\\Includes\\Repos\\Faq_Repo' ) ) {
                 }
             }
             // helpie_error_log(' $term_args : ' . print_r($term_args, true));
-            $faq_categories = get_terms( 'helpie_faq_category', $term_args );
+            $faq_categories = get_terms( $term_args );
             // helpie_error_log(' $faq_categories : ' . print_r($faq_categories, true));
+            return $faq_categories;
             return $faq_categories;
         }
 

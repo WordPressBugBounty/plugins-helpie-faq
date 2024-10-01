@@ -123,6 +123,7 @@ if (!function_exists('hfaq_allowed_html_tags')) {
         $allowedposttags['option'] = $allowed_form_attrs;
         $allowedposttags['textarea'] = $allowed_form_attrs;
         $allowedposttags['script'] = $allowed_form_attrs;
+        // $allowedposttags['a'] = $allowed_form_attrs;
     }
 }
 
@@ -132,6 +133,15 @@ if (!function_exists('hfaq_safe_echo')) {
         hfaq_allowed_html_tags();
         $allowed_form_tags = wp_kses_allowed_html('post');
         echo wp_kses($content, $allowed_form_tags);
+    }
+}
+
+if (!function_exists('hfaq_safe_kses')) {
+    function hfaq_safe_kses($content)
+    {
+        hfaq_allowed_html_tags();
+        $allowed_form_tags = wp_kses_allowed_html('post');
+        return wp_kses($content, $allowed_form_tags);
     }
 }
 

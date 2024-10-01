@@ -102,7 +102,7 @@ if (!class_exists('\HelpieFaq\Features\Insights\Insights_Page')) {
 
         public function print_core_settings()
         {
-            echo "<span class='sub-title1'>" . __('Insights to a better Knowledge base.', 'pauple-helpie') . "</span>";
+            echo "<span class='sub-title1'>" . esc_html(__('Insights to a better Knowledge base.', 'pauple-helpie')) . "</span>";
         }
 
     } // END CLASS

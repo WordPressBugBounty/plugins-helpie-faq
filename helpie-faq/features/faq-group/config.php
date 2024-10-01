@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace HelpieFaq\Features\Faq_Group;
 

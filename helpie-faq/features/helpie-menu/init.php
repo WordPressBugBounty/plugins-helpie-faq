@@ -79,12 +79,10 @@ if ( !class_exists( '\\HelpieFaq\\Features\\Helpie_Menu\\Init' ) ) {
             );
             $params = $defaults;
             $insight_image = HELPIE_FAQ_URL . '/assets/img/insights.png';
-            $html = '';
-            $html = '<section id="content-tease">';
-            $html .= $this->faq_pro_buy_notice_info();
-            // $html .= '<img src="' . esc_url($insight_image) . '" alt="' . esc_html__("FAQ Insights", "helpie-faq") . '" title="' . esc_html__("FAQ Insights", "helpie-faq") . '">';
-            $html .= '</section>';
-            echo $html;
+            echo '<section id="content-tease">';
+            hfaq_safe_echo( $this->faq_pro_buy_notice_info() );
+            // echo '<img src="' . esc_url($insight_image) . '" alt="' . esc_html__("FAQ Insights", "helpie-faq") . '" title="' . esc_html__("FAQ Insights", "helpie-faq") . '">';
+            echo '</section>';
         }
 
         public function faq_pro_buy_notice_info() {

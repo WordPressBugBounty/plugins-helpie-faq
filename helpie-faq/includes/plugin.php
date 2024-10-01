@@ -187,10 +187,10 @@ if ( !class_exists( '\\Helpie_FAQ' ) ) {
         }
 
         public function redirect_for_helpie_menu() {
-            $post_id = ( isset( $_GET['post'] ) ? (int) $_GET['post'] : null );
-            $action = ( isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : 'add' );
-            $page = ( isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '' );
-            $post_type_from_url = ( isset( $_GET['post_type'] ) ? sanitize_text_field( $_GET['post_type'] ) : '' );
+            $post_id = ( isset( $_GET['post'] ) ? (int) sanitize_text_field( wp_unslash( $_GET['post'] ) ) : null );
+            $action = ( isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : 'add' );
+            $page = ( isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '' );
+            $post_type_from_url = ( isset( $_GET['post_type'] ) ? sanitize_text_field( wp_unslash( $_GET['post_type'] ) ) : '' );
             if ( $post_type_from_url != '' ) {
                 $post_type = $post_type_from_url;
             } else {
@@ -424,6 +424,13 @@ if ( !class_exists( '\\Helpie_FAQ' ) ) {
                 'url'                     => HELPIE_FAQ_URL,
                 'enabled_submission'      => $show_submission,
                 'enable_search_highlight' => $show_search_highlight,
+                'translation'             => array(
+                    'next'     => __( 'Next', 'helpie-faq' ),
+                    'previous' => __( 'Previous', 'helpie-faq' ),
+                    'page'     => __( 'Page', 'helpie-faq' ),
+                    'first'    => __( 'First', 'helpie-faq' ),
+                    'last'     => __( 'Last', 'helpie-faq' ),
+                ),
             );
             // Q&A Script Enqueue
             if ( $this->should_load_qna() ) {

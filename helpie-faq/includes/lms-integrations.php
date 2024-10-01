@@ -8,9 +8,11 @@ if (!defined('ABSPATH')) {
 
 if (!class_exists('\HelpieFaq\Includes\Lms_Integrations')) {
 
-    class Lms_Integrations {
+    class Lms_Integrations
+    {
 
-        public function __construct() {
+        public function __construct()
+        {
             // error_log('Lms_Integrations : ');
 
             // LearnPress Hooks - Course
@@ -39,10 +41,12 @@ if (!class_exists('\HelpieFaq\Includes\Lms_Integrations')) {
             $this->set_global_settings();
         }
 
-        public function set_global_settings() {
+        public function set_global_settings()
+        {
         }
 
-        public function setup() {
+        public function setup()
+        {
             $lms_default_args = [
                 'show_title' => true,
                 'title' => "FAQs",
@@ -72,14 +76,16 @@ if (!class_exists('\HelpieFaq\Includes\Lms_Integrations')) {
             // $lms_args = ['show_title', 'title']
         }
 
-        public function learndash_course() {
+        public function learndash_course()
+        {
             // error_log('learndash_course');
             $this->print_faq_html();
             // $this->get_faq_html();
 
         }
 
-        public function tutorlms_lesson_sidebar($content) {
+        public function tutorlms_lesson_sidebar($content)
+        {
             $faq_html = '<div class="tutor-accordion-item-header" tutor-course-single-topic-toggler="">';
             $faq_html .= 'FAQs';
             $faq_html .= '</div>';
@@ -92,14 +98,16 @@ if (!class_exists('\HelpieFaq\Includes\Lms_Integrations')) {
             return $content;
         }
 
-        public function tutorlms_courses($content) {
+        public function tutorlms_courses($content)
+        {
             // error_log('tutor_course_loop_after_content');
             $content = $content . $this->get_faq_html();
 
             return $content;
         }
 
-        public function courses_tabs($defaults) {
+        public function courses_tabs($defaults)
+        {
             // error_log('courses_tabs $defaults : ' . print_r($defaults, true));
             $faq_tab = array(
                 'title' => 'Helpie FAQs',
@@ -110,18 +118,21 @@ if (!class_exists('\HelpieFaq\Includes\Lms_Integrations')) {
             return $defaults;
         }
 
-        public function lessons_faq($content) {
+        public function lessons_faq($content)
+        {
             // error_log('lessons_faq $content : ' . print_r($content, true));
             $faq_html = $this->get_faq_html();
             $content = $content . $faq_html;
             return $content;
         }
 
-        public function print_faq_html() {
-            echo $this->get_faq_html();
+        public function print_faq_html()
+        {
+            hfaq_safe_echo($this->get_faq_html());
         }
 
-        public function get_faq_html() {
+        public function get_faq_html()
+        {
             $this->setup();
             $args = $this->args;
 
@@ -141,7 +152,8 @@ if (!class_exists('\HelpieFaq\Includes\Lms_Integrations')) {
             return $faq->get_view($args);
         }
 
-        public function get_faqs_of_post($post_id = 0) {
+        public function get_faqs_of_post($post_id = 0)
+        {
             $post_id = get_the_id();
             // error_log('post_id: ' . $post_id);
 

@@ -3,15 +3,15 @@ msgstr ""
 "Project-Id-Version: Helpie FAQ\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-20 08:22+0000\n"
-"PO-Revision-Date: 2018-09-20 08:24+0000\n"
+"PO-Revision-Date: 2024-09-27 17:39+0530\n"
 "Last-Translator: admin <s@g.com>\n"
 "Language-Team: German\n"
 "Language: de_DE\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Loco https://localise.biz/"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 3.4.4\n"
 
 msgid "FAQ"
 msgstr "FAQ"
@@ -283,7 +283,7 @@ msgid "Category FAQ Styles"
 msgstr "Kategorie FAQ Stile"
 
 msgid "Category Style are shown only for Simple Accordion with Category or FAQ list display mode"
-msgstr "Der Kategoriestil wird nur für die einfache Akkordeon mit dem Anzeigemodus "Kategorie" oder "FAQ-Liste" angezeigt"
+msgstr "Der Kategoriestil wird nur für die einfache Akkordeon mit dem Anzeigemodus \"Kategorie\" oder \"FAQ-Liste\" angezeigt"
 
 msgid "Category Style"
 msgstr "Kategoriestil"
@@ -440,4 +440,20 @@ msgid "Answer"
 msgstr "Antworten"
 
 msgid "Submit"
-msgstr "einreichen"
+msgstr "Einreichen"
+
+# PAGINATION
+msgid "Next"
+msgstr "Nächste"
+
+msgid "Previous"
+msgstr "Vorherige"
+
+msgid "Page"
+msgstr "Seite"
+
+msgid "First"
+msgstr "Erste"
+
+msgid "Last"
+msgstr "Letzte"

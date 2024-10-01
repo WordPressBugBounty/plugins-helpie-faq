@@ -243,7 +243,7 @@ if ( !class_exists( '\\HelpieFaq\\Includes\\Cpt' ) ) {
                 $my_var = get_post_meta( $post_id, 'helpie_woo_metabox', true );
                 if ( !empty( $my_var ) && isset( $my_var ) ) {
                     foreach ( $my_var as $item ) {
-                        echo get_the_title( $item ) . ", ";
+                        echo esc_html( get_the_title( $item ) ) . ", ";
                     }
                 } else {
                     echo "__";
@@ -264,8 +264,8 @@ if ( !class_exists( '\\HelpieFaq\\Includes\\Cpt' ) ) {
         }
 
         public function render_qna_options( $post ) {
-            $post_id = ( isset( $_GET['post'] ) ? $_GET['post'] : 0 );
-            $action = ( isset( $_GET['action'] ) ? $_GET['action'] : '' );
+            $post_id = ( isset( $_GET['post'] ) ? sanitize_text_field( wp_unslash( $_GET['post'] ) ) : 0 );
+            $action = ( isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '' );
             $is_post_edit_page = $post_id > 0 && $action == 'edit';
             wp_nonce_field( 'helpie_qna_metabox_' . $post->ID, 'helpie_qna_metabox_' . $post->ID . '_nonce' );
             $selected_options = \get_post_meta( $post->ID, 'question_types', true );
@@ -290,7 +290,7 @@ if ( !class_exists( '\\HelpieFaq\\Includes\\Cpt' ) ) {
                 $html .= '</div>';
             }
             $html .= '</div>';
-            echo $html;
+            hfaq_safe_echo( $html );
         }
 
     }

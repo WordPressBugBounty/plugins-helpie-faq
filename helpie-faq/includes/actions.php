@@ -37,8 +37,8 @@ if (!class_exists('\HelpieFaq\Includes\Actions')) {
         public function add_category_taxonomy_custom_fields($column_name, $screen)
         {
 
-            $taxonomy = isset($_GET['taxonomy']) ? $_GET['taxonomy'] : '';
-            $post_type = isset($_GET['post_type']) ? $_GET['post_type'] : '';
+            $taxonomy = isset($_GET['taxonomy']) ? sanitize_text_field(wp_unslash($_GET['taxonomy'])) : '';
+            $post_type = isset($_GET['post_type']) ? sanitize_text_field(wp_unslash($_GET['post_type'])) : '';
             $is_faq_category = ($taxonomy == HELPIE_FAQ_CATEGORY_TAXONOMY && $post_type == HELPIE_FAQ_POST_TYPE);
             if (!$is_faq_category) {
                 return;
@@ -58,13 +58,13 @@ if (!class_exists('\HelpieFaq\Includes\Actions')) {
             $content .= '</div>';
             $content .= '</fieldset>';
 
-            echo $content;
+            hfaq_safe_echo($content);
         }
 
         public function save_category_taxonomy_custom_fields($term_id)
         {
             if (isset($_POST['order']) && !empty($_POST['order'])) {
-                $order = $_POST['order'];
+                $order = sanitize_text_field(wp_unslash($_POST['order']));
                 update_term_meta($term_id, 'order', $order);
             }
         }

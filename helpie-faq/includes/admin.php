@@ -235,8 +235,8 @@ if (!class_exists('\HelpieFaq\Includes\Admin')) {
         {
 
             // error_log('enqueue_helpie_menu_collection');
-            $post_id = isset($_GET['post']) ? (int) $_GET['post'] : 0;
-            $action = isset($_GET['action']) ? sanitize_text_field($_GET['action']) : '';
+            $post_id = isset($_GET['post']) ? (int) sanitize_text_field(wp_unslash($_GET['post'])) : 0;
+            $action = isset($_GET['action']) ? sanitize_text_field(wp_unslash($_GET['action'])) : '';
 
             if ($post_id != null && $post_id != 0) {
                 $settings = get_post_meta($post_id, 'helpie_menu_settings', true);
@@ -262,13 +262,13 @@ if (!class_exists('\HelpieFaq\Includes\Admin')) {
         }
         public function enqueue_faq_group_collection()
         {
-            $taxonomy = isset($_GET['taxonomy']) ? $_GET['taxonomy'] : '';
+            $taxonomy = isset($_GET['taxonomy']) ? sanitize_text_field(wp_unslash($_GET['taxonomy'])) : '';
             if ($taxonomy != 'helpie_faq_group') {
                 return;
             }
-            $tag_ID = isset($_GET['tag_ID']) && is_numeric($_GET['tag_ID']) ? $_GET['tag_ID'] : 0;
+            $tag_ID = isset($_GET['tag_ID']) && is_numeric($_GET['tag_ID']) ? (int) sanitize_text_field(wp_unslash($_GET['tag_ID'])) : 0;
 
-            $page_action = isset($_GET['helpie_faq_page_action']) ? $_GET['helpie_faq_page_action'] : '';
+            $page_action = isset($_GET['helpie_faq_page_action']) ? sanitize_text_field(wp_unslash($_GET['helpie_faq_page_action'])) : '';
             $is_faq_group_add_or_edit_page = ($page_action == 'create' || $tag_ID > 0);
             if (!$is_faq_group_add_or_edit_page) {
                 return;

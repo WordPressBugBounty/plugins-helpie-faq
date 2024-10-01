@@ -75,8 +75,8 @@ if (!class_exists('\HelpieFaq\Features\Faq_Group\Actions')) {
         {
 
             $html = '';
-            $html = '<input type="hidden" name="faq_group_setting_fields_object" value="" />';
-            echo $html;
+            echo '<input type="hidden" name="faq_group_setting_fields_object" value="" />';
+
         }
 
         public function load_csf_action_hooks()
@@ -147,10 +147,12 @@ if (!class_exists('\HelpieFaq\Features\Faq_Group\Actions')) {
 
         public function hide_slug_and_description_rows()
         {
+
             echo "<style>.term-slug-wrap { display:none; } .term-description-wrap { display:none; } #edittag{ max-width: 100%;}</style>";
-            $page_action = isset($_GET['helpie_faq_page_action']) ? $_GET['helpie_faq_page_action'] : '';
+            $page_action = isset($_GET['helpie_faq_page_action']) ? sanitize_text_field(wp_unslash($_GET['helpie_faq_page_action'])) : '';
+            // error_log('page_action: ' . $page_action);
             if ('create' == $page_action) {
-                echo $this->get_faq_group_settings_html_content();
+                hfaq_safe_echo($this->get_faq_group_settings_html_content());
             }
         }
 

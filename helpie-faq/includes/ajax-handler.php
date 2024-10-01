@@ -17,8 +17,8 @@ if ( !class_exists( '\\HelpieFaq\\Includes\\Ajax_Handler' ) ) {
         }
 
         public function track_shortcodes_and_widgets() {
-            $event_name = ( isset( $_REQUEST['event_name'] ) ? $_REQUEST['event_name'] : '' );
-            $event_value = ( isset( $_REQUEST['event_value'] ) ? $_REQUEST['event_value'] : '' );
+            $event_name = ( isset( $_REQUEST['event_name'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['event_name'] ) ) : '' );
+            $event_value = ( isset( $_REQUEST['event_value'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['event_value'] ) ) : '' );
             if ( empty( $event_name ) || empty( $event_value ) ) {
                 return;
             }
