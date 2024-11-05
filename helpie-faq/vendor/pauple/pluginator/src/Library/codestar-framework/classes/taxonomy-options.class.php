@@ -156,6 +156,7 @@ if ( ! class_exists( 'CSF_Taxonomy_Options' ) ) {
 
     }
 
+    
     public function escape_meta_value($meta_value) {
        // error_log('meta_value: ' . print_r($meta_value, true));
 
@@ -174,15 +175,14 @@ if ( ! class_exists( 'CSF_Taxonomy_Options' ) ) {
           // $title = strip_tags($title);
           // $title = esc_attr($title);
           // error_log('sanitized title: ' . $title);
-          $title = hfaq_safe_kses($title);
-          $content = hfaq_safe_kses($content);
-          // error_log('hfaq_safe_kses title: ' . $title);
-          // error_log('hfaq_safe_kses content: ' . $content);
+          $title = pluginator_safe_kses($title);
+          $content = pluginator_safe_kses($content);
+ 
           $meta_value[$key]['faq_item']['title'] = $title;
           $meta_value[$key]['faq_item']['content'] = $content;
         } else {
           $value = html_entity_decode($value);
-          $value = hfaq_safe_kses($value);
+          $value = pluginator_safe_kses($value);
         }
       }
       return $meta_value;

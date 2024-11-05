@@ -1,9 +1,9 @@
-=== FAQ / Accordion / Docs – Helpie WordPress FAQ Accordion plugin ===
+=== FAQ / Accordion / Docs / KB – Helpie WordPress FAQ Accordion plugin ===
 Donate link: http://helpiewp.com/
 Tags: faq, accordion, menu, docs, category accordion 
 Requires at least: 5.4
 Tested up to: 6.6.2
-Stable tag: 1.28
+Stable tag: 1.29
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -204,6 +204,9 @@ It automatically brings the most viewed FAQs first to bring the most useful answ
 14. FAQ Insights to understand customers better (PRO)
 
 == Changelog ==
+
+= 1.29 =
+Fix: Only 1st FAQ in a page respects "open first faq" option 
 
 = 1.28 =
 Fix: wp.org compatibility
