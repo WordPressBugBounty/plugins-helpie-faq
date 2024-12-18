@@ -3,7 +3,7 @@ Donate link: http://helpiewp.com/
 Tags: faq, accordion, menu, docs, category accordion 
 Requires at least: 5.4
 Tested up to: 6.6.2
-Stable tag: 1.29
+Stable tag: 1.30
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -204,6 +204,9 @@ It automatically brings the most viewed FAQs first to bring the most useful answ
 14. FAQ Insights to understand customers better (PRO)
 
 == Changelog ==
+
+= 1.30 =
+Fix: Elementor 3.26 compatibility
 
 = 1.29 =
 Fix: Only 1st FAQ in a page respects "open first faq" option 
