@@ -3,7 +3,7 @@ Donate link: http://helpiewp.com/
 Tags: faq, accordion, menu, docs, category accordion 
 Requires at least: 5.4
 Tested up to: 6.6.2
-Stable tag: 1.30
+Stable tag: 1.32
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -204,6 +204,12 @@ It automatically brings the most viewed FAQs first to bring the most useful answ
 14. FAQ Insights to understand customers better (PRO)
 
 == Changelog ==
+
+= 1.32 = 
+Fix: Freemius SDK update
+
+= 1.31 = 
+Improvements: Added new filter to customize the content of each FAQ item
 
 = 1.30 =
 Fix: Elementor 3.26 compatibility

@@ -5,7 +5,7 @@ Plugin Name: Helpie FAQ
 Plugin URI: http://helpiewp.com/helpie-faq/
 Description: Awesome WordPress FAQ plugin
 Author: HelpieWP
-Version: 1.30
+Version: 1.32
 Author URI: http://helpiewp.com
 Network: True
 Text Domain: helpie-faq
@@ -24,7 +24,7 @@ if (function_exists('hf_fs')) {
 } else {
     if (!class_exists('Helpie_FAQ_Plugin')) {
 
-        define('HELPIE_FAQ_VERSION', '1.30');
+        define('HELPIE_FAQ_VERSION', '1.32');
         define('HELPIE_FAQ_DOMAIN', 'helpie-faq');
         define('HELPIE_FAQ_POST_TYPE', 'helpie_faq');
         define('HELPIE_MENU_POST_TYPE', 'helpie_menu');

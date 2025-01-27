@@ -200,6 +200,8 @@ if (!class_exists('\Stylus\Components\Accordion')) {
                 ));
             }
 
+            $content = apply_filters('helpie_faq/single_item_content', $content);
+
             /** stop using post content within the paragraph tag. sometimes it's added automatically at the top and bottom of the content.     */
             $html .= $content;
 
