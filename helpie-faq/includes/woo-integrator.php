@@ -82,7 +82,7 @@ if (!class_exists('\HelpieFaq\Includes\Woo_Integrator')) {
 
             // echo "is_empty: " . empty($faq_view);
             // echo $faq_view;
-            if ($product_has_faqs || $args['show_submission'] == 1) {
+            if ($product_has_faqs || isset($args['show_submission']) && $args['show_submission'] == 1) {
                 hfaq_safe_echo($faq_view);
             } else {
                 // hfaq_safe_echo($faq_view);

@@ -758,11 +758,45 @@ if (!class_exists('\HelpieFaq\Includes\Settings\Settings')) {
             return '<span style="color: #5cb85c; font-weight: 600;">* Pro Feature</span>';
         }
 
+        public function sync_group_termmeta_with_posts($term_id) {
+            if (empty($term_id)) {
+                return;
+            }
+
+            $faq_group_repo = new \HelpieFaq\Includes\Repos\Faq_Group();
+            
+            // Get all posts associated with this group
+            $posts = $faq_group_repo->get_posts_by_term_id($term_id);
+            
+            if (empty($posts)) {
+                return;
+            }
+
+            // Get existing items in term meta
+            $faq_group_items = $faq_group_repo->get_faq_group_items($term_id);
+            
+            // Add each post that's not already in the term meta
+            foreach ($posts as $post) {
+                if (!$faq_group_repo->faq_post_exists_in_group($post, $faq_group_items)) {
+                    $faq_group_items = $faq_group_repo->modify_faq_group_items('add', $post->ID, $faq_group_items);
+                }
+            }
+            
+            // Update the term meta with synchronized items
+            $faq_group_repo->update_faq_group_term_meta($term_id, $faq_group_items);
+        }
+
         public function group_category_page($prefix)
         {
-            // Create taxonomy options
+            // First check for any posts that belong to the group but aren't in term meta
+            $tag_ID = isset($_GET['tag_ID']) && is_numeric($_GET['tag_ID']) ? (int) sanitize_text_field(wp_unslash($_GET['tag_ID'])) : 0;
+            
+            if ($tag_ID > 0) {
+                $this->sync_group_termmeta_with_posts($tag_ID);
+            }
 
             $faq_group_item_fields = $this->get_faq_group_item_fields($prefix);
+            error_log('[$faq_group_item_fields] : ' . print_r($faq_group_item_fields, true));
 
             \CSF::createTaxonomyOptions($prefix, array(
                 'taxonomy' => 'helpie_faq_group',
