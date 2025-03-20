@@ -796,7 +796,7 @@ if (!class_exists('\HelpieFaq\Includes\Settings\Settings')) {
             }
 
             $faq_group_item_fields = $this->get_faq_group_item_fields($prefix);
-            error_log('[$faq_group_item_fields] : ' . print_r($faq_group_item_fields, true));
+            // error_log('[$faq_group_item_fields] : ' . print_r($faq_group_item_fields, true));
 
             \CSF::createTaxonomyOptions($prefix, array(
                 'taxonomy' => 'helpie_faq_group',

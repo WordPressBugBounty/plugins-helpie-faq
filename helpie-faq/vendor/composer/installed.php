@@ -3,7 +3,7 @@
         'name' => 'helpie/faq',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => '381f97c572f33f854f8777513259771c4b0ddd74',
+        'reference' => '0411c8172991a232f5b3ceebf49ec305984944ff',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -22,7 +22,7 @@
         'helpie/faq' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => '381f97c572f33f854f8777513259771c4b0ddd74',
+            'reference' => '0411c8172991a232f5b3ceebf49ec305984944ff',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
