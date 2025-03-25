@@ -22,7 +22,7 @@ if ( !class_exists( '\\HelpieFaq\\Features\\Faq\\Faq_View' ) ) {
             $pagination_args = $this->get_pagination_args( $viewProps );
             $pagination_args = ( isset( $pagination_args ) && !empty( $pagination_args ) ? wp_json_encode( $pagination_args ) : "" );
             $pagination_enabled = ( !empty( $pagination_args ) ? "1" : "0" );
-            $html = "<section id='{$id}' class='helpie-faq accordions {$additional_classes} ' data-collection='{$pagination_args}' data-pagination='0' data-search='0' data-pagination-enabled='{$pagination_enabled}'>";
+            $html = "<section id='{$id}' \n                class='helpie-faq accordions {$additional_classes}' \n                data-collection='{$pagination_args}' \n                data-pagination='0' \n                data-search='0' \n                data-pagination-enabled='{$pagination_enabled}'\n                role='region'\n                aria-label='FAQ Section'\n                aria-live='polite'>";
             $html .= $this->get_the_title( $viewProps );
             // TODO check FAQ searchbar is enable or not
             $is_faq_search_enabled = $this->is_faq_search_enabled( $viewProps );
@@ -31,7 +31,9 @@ if ( !class_exists( '\\HelpieFaq\\Features\\Faq\\Faq_View' ) ) {
             }
             $Actions = new \HelpieFaq\Includes\Actions();
             $Actions->handle_frontend_assets( 'helpie_faq_shortcode' );
+            $html .= "<div id='helpie-faq-accordion'>";
             $html .= $stylus->accordion->get_view( $viewProps );
+            $html .= "</div>";
             $html .= '</section>';
             return $html;
         }

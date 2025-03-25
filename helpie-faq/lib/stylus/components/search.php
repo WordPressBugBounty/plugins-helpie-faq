@@ -21,7 +21,7 @@ if (!class_exists('\Stylus\Components\Search')) {
 
             $html = '<form class="search" onSubmit="return false;">';
             $html .= '<div class="search__wrapper">';
-            $html .= '<input type="text" class="search__input" placeholder="' . esc_html($props['search_placeholder']) . '">';
+            $html .= '<input type="text" class="search__input" aria-label="Search" placeholder="' . esc_html($props['search_placeholder']) . '">';
             // $html .= '<img class="search__icon" src="' . HELPIE_FAQ_URL . '/assets/img/search-icon.png">';
             // $html .= '<span class="search__icon"><i class="fa fa-search"></i></span>';
             $html .= '<span class="search__icon">' . $search_icon . '</span>';

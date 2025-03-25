@@ -167,8 +167,22 @@ if (!class_exists('\Stylus\Components\Accordion')) {
             $tags = isset($props['tags']) && !empty($props['tags']) ? $props['tags'] : '';
             $is_category = isset($props['term_id']) ? 'accordion__category' : '';
 
+            // Generate unique IDs for ARIA attributes
+            $header_id = 'accordion-header-' . $id;
+            $content_id = 'accordion-content-' . $id;
+            $is_expanded = $show_accordion_body ? 'true' : 'false';
+
             $html = '<li class="accordion__item ' . esc_attr($is_category) . '">';
-            $html .= '<div class="accordion__header ' . esc_attr($accordion__header_classes) . '" data-id="' . esc_attr($id) . '" data-item="' . esc_attr($url_attribute) . '" style="' . $accordion_styles['header_styles'] . '" data-tags="' . esc_attr($tags) . '">';
+            $html .= '<div class="accordion__header ' . esc_attr($accordion__header_classes) . '" 
+                id="' . esc_attr($header_id) . '"
+                role="button"
+                aria-expanded="' . esc_attr($is_expanded) . '"
+                aria-controls="' . esc_attr($content_id) . '"
+                data-id="' . esc_attr($id) . '" 
+                data-item="' . esc_attr($url_attribute) . '" 
+                style="' . $accordion_styles['header_styles'] . '" 
+                data-tags="' . esc_attr($tags) . '"
+                tabindex="0">';
 
             /** Get the accordion title icon  */
             if (isset($props['term_id']) && !empty($props['term_id'])) {
@@ -186,7 +200,11 @@ if (!class_exists('\Stylus\Components\Accordion')) {
 
             $html .= $custom_toggle_icon_content;
             $html .= '</div>';
-            $html .= '<div class="accordion__body" style="' . $accordion_body_styles . '">';
+            $html .= '<div id="' . esc_attr($content_id) . '" 
+                class="accordion__body" 
+                role="region"
+                aria-labelledby="' . esc_attr($header_id) . '"
+                style="' . $accordion_body_styles . '">';
 
             // error_log('$props : ' . print_r($props, true));
             // $collectionProps['raw_content'] = true;
