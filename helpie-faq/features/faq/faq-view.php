@@ -31,9 +31,8 @@ if ( !class_exists( '\\HelpieFaq\\Features\\Faq\\Faq_View' ) ) {
             }
             $Actions = new \HelpieFaq\Includes\Actions();
             $Actions->handle_frontend_assets( 'helpie_faq_shortcode' );
-            $html .= "<div id='helpie-faq-accordion'>";
+            // $html .= "<div id='helpie-faq-accordion'>";
             $html .= $stylus->accordion->get_view( $viewProps );
-            $html .= "</div>";
             $html .= '</section>';
             return $html;
         }
