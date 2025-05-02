@@ -234,6 +234,13 @@ if (!class_exists('\HelpieFaq\Includes\Modules\Faq_Rest_Api\Faq_Rest_Api')) {
                     'post_title' => $title,
                     'post_status' => 'publish',
                 ));
+                
+                // Change action to 'edit' after successfully adding a new post
+                $action = 'edit';
+                
+                if (is_wp_error($post_id) || $post_id === 0) {
+                    return new \WP_Error('UNABLE_TO_CREATE', $this->get_error_message('UNABLE_TO_CREATE'), array('status' => 400));
+                }
             }
 
             // error_log('save_menu_settings() $settings: ' . print_r($settings, true));

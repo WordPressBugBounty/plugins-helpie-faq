@@ -10,12 +10,7 @@ if ( !class_exists( '\\HelpieFaq\\Features\\Helpie_Menu\\Init' ) ) {
     class Init {
         public function __construct() {
             add_action( 'admin_menu', array($this, 'add_single_menu_post_page') );
-            add_action(
-                "edit_form_after_title",
-                array($this, 'get_add_template_view'),
-                10,
-                2
-            );
+            // add_action("edit_form_after_title", array($this, 'get_add_template_view'), 10, 1);
             // add_action("helpie_menu_edit_form", array($this, 'get_add_template_view'), 10, 2);
             // add_action("helpie_menu_add_form", array($this, 'hide_slug_and_description_rows'), 10, 2);
         }
@@ -66,11 +61,46 @@ if ( !class_exists( '\\HelpieFaq\\Features\\Helpie_Menu\\Init' ) ) {
             return [];
         }
 
-        public function get_add_template_view( $post ) {
-            if ( HELPIE_MENU_POST_TYPE != $post->post_type ) {
+        /**
+         * Get the current post type using multiple methods
+         * 
+         * @param object|null $post Post object if available
+         * @return string The current post type or empty string if not found
+         */
+        private function get_current_post_type( $post = null ) {
+            // Method 1: Try to get post_type from URL parameter
+            $post_type = ( isset( $_GET['post_type'] ) ? $_GET['post_type'] : '' );
+            // Method 2: If not in URL, try to get from global $typenow
+            if ( empty( $post_type ) && isset( $GLOBALS['typenow'] ) ) {
+                $post_type = $GLOBALS['typenow'];
+            }
+            // Method 3: If editing a post, get post type from post ID
+            if ( empty( $post_type ) && isset( $_GET['post'] ) ) {
+                $post_id = (int) $_GET['post'];
+                // Access WordPress functions through global scope
+                global $wpdb;
+                if ( $post_id > 0 ) {
+                    // Direct database query to avoid namespace issues
+                    $query = $wpdb->prepare( "SELECT post_type FROM {$wpdb->posts} WHERE ID = %d", $post_id );
+                    $post_type = $wpdb->get_var( $query );
+                }
+            }
+            // Method 4: If we have a post object, use it
+            if ( empty( $post_type ) && is_object( $post ) && isset( $post->post_type ) ) {
+                $post_type = $post->post_type;
+            }
+            return $post_type;
+        }
+
+        public function get_add_template_view( $post = null ) {
+            // Get the current post type
+            $post_type = $this->get_current_post_type( $post );
+            error_log( "get_add_template_view post_type: " . $post_type );
+            // Check if we're on the correct post type
+            if ( $post_type != HELPIE_MENU_POST_TYPE ) {
                 return;
             }
-            // error_log('get_add_template_view');
+            error_log( 'get_add_template_view - continuing with helpie_menu post type' );
             // echo "<styl> body{display:none;}</style>";
             $defaults = array(
                 'table_mode'     => 'editor',
