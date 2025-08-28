@@ -194,7 +194,7 @@ if ( !class_exists( '\\HelpieFaq\\Includes\\Cpt' ) ) {
             }
             /* Registering Woocommerce Products Meta */
             $woo_integrator = new \HelpieFaq\Includes\Woo_Integrator();
-            if ( $woo_integrator->is_woocommerce_activated() ) {
+            if ( $woo_integrator->is_woocommerce_activated() && is_admin() ) {
                 if ( !isset( WC()->session ) ) {
                     WC()->session = new \WC_Session_Handler();
                 }
