@@ -70,11 +70,10 @@ if (!class_exists('\HelpieFaq\Features\Insights\Trackers\Click_Tracker')) {
 
         public function update_count($new_counter_data, $event_data)
         {
+            $data_type = isset($event_data['data_type']) ? $event_data['data_type'] : '';
+            $id = isset($event_data['id']) ? $event_data['id'] : 0;
 
-            // Extracts array keys as variables
-            extract($event_data);
-
-            if ($data_type == 'post') {
+            if ($data_type === 'post') {
                 update_post_meta($id, $this->meta_key, $new_counter_data);
             } else {
                 update_term_meta($id, $this->meta_key, $new_counter_data);
@@ -83,16 +82,14 @@ if (!class_exists('\HelpieFaq\Features\Insights\Trackers\Click_Tracker')) {
 
         public function get_current_count($info)
         {
-            // Extracts array keys as variables
-            extract($info);
+            $data_type = isset($info['data_type']) ? $info['data_type'] : '';
+            $id = isset($info['id']) ? $info['id'] : 0;
 
             $count = array();
 
-            if ($data_type == 'post') {
-                // $count = get_post_meta( $id, 'click_counter', false ); // 'single' parameter is false
+            if ($data_type === 'post') {
                 $count = $this->repo->get_post_meta($id);
             } else {
-                // $count = get_term_meta($id, 'click_counter', false); // 'single' parameter is false
                 $count = $this->repo->get_term_meta($id);
             }
 
@@ -114,9 +111,24 @@ if (!class_exists('\HelpieFaq\Features\Insights\Trackers\Click_Tracker')) {
 
             $info_indexed = explode("-", $ided_content);
 
+            // Security: Validate data_type and id format to prevent arbitrary meta updates
+            $allowed_data_types = array('post', 'term');
+            $data_type = isset($info_indexed[0]) ? $info_indexed[0] : '';
+            $id = isset($info_indexed[1]) ? absint($info_indexed[1]) : 0;
+
+            // Validate data_type is in allowlist
+            if (!in_array($data_type, $allowed_data_types, true)) {
+                return null;
+            }
+
+            // Validate id is a positive integer
+            if ($id <= 0) {
+                return null;
+            }
+
             $info = array();
-            $info['data_type'] = $info_indexed[0]; // 'term' or 'post'
-            $info['id'] = $info_indexed[1]; // value of term_id or post_id
+            $info['data_type'] = $data_type;
+            $info['id'] = $id;
 
             return $info;
         }

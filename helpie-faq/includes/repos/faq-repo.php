@@ -120,15 +120,22 @@ if ( !class_exists( '\\HelpieFaq\\Includes\\Repos\\Faq_Repo' ) ) {
             }
             $term_args['orderby'] = 'term_id';
             if ( isset( $args['categories'] ) && !empty( $args['categories'] ) ) {
-                $category_is_all = is_array( $args['categories'] ) && in_array( 'all', $args['categories'] );
+                // Check if 'all' is passed as string or in array
+                $category_is_all = $args['categories'] === 'all' || is_array( $args['categories'] ) && in_array( 'all', $args['categories'] );
                 if ( !$category_is_all ) {
-                    $term_args['include'] = $args['categories'];
+                    // Convert names/slugs to term IDs if needed
+                    $categories = ( is_array( $args['categories'] ) ? $args['categories'] : explode( ',', $args['categories'] ) );
+                    $term_ids = $this->convert_terms_to_ids( $categories, 'helpie_faq_category' );
+                    // If no valid term IDs found, return empty array
+                    if ( empty( $term_ids ) ) {
+                        return array();
+                    }
+                    $term_args['include'] = $term_ids;
                 }
             }
             // helpie_error_log(' $term_args : ' . print_r($term_args, true));
             $faq_categories = get_terms( $term_args );
             // helpie_error_log(' $faq_categories : ' . print_r($faq_categories, true));
-            return $faq_categories;
             return $faq_categories;
         }
 
@@ -199,6 +206,18 @@ if ( !class_exists( '\\HelpieFaq\\Includes\\Repos\\Faq_Repo' ) ) {
             $post_args = array_merge( $term_args, $post_args );
             $result = get_posts( $post_args );
             return $result;
+        }
+
+        /**
+         * Convert term names/slugs to term IDs
+         * Wrapper for shared Helpers utility
+         *
+         * @param array $terms Array of term values (can be term IDs or names/slugs)
+         * @param string $taxonomy Taxonomy name
+         * @return array Array of term IDs
+         */
+        protected function convert_terms_to_ids( $terms, $taxonomy ) {
+            return \HelpieFaq\Includes\Utils\Helpers::convert_terms_to_ids( $terms, $taxonomy );
         }
 
     }

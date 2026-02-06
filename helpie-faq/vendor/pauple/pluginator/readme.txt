@@ -1,2 +1,16 @@
 === Pluginator - Making Plugin Development Easy ===
-Stable tag: 0.3.6
+Stable tag: 0.3.9
+
+== Change log == 
+
+0.3.9
+
+* Updated Freemius to 2.13.0
+
+0.3.8
+
+* Updated Freemius to 2.12.2
+
+0.3.7
+
+* Updated Freemius to 2.12.1

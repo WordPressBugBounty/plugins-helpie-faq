@@ -12,13 +12,20 @@ if (!class_exists('\HelpieFaq\Includes\Services\Schema_Snippet')) {
 
         public function load_helpie_faq_schema_snippet()
         {
-            global $post;
+            global $post, $helpie_faq_schema_printed;
+            
+            // Prevent duplicate schema output
+            if (isset($helpie_faq_schema_printed) && $helpie_faq_schema_printed) {
+                return;
+            }
+            
             $schema_snippet = '';
 
             /** Check and generate the schema snippet for single helpie_faq post  */
             if (isset($post) && is_single() && get_post_type() == 'helpie_faq') {
                 $schema_snippet = $this->get_single_helpie_faq_schema_snippet();
                 hfaq_safe_echo($schema_snippet);
+                $helpie_faq_schema_printed = true;
                 return;
             }
 
@@ -31,6 +38,7 @@ if (!class_exists('\HelpieFaq\Includes\Services\Schema_Snippet')) {
             $faq_items = $schema_generator->get_faq_items($helpie_faq_schema_props);
             $schema_snippet = $this->get_schema_snippet($faq_items);
             hfaq_safe_echo($schema_snippet);
+            $helpie_faq_schema_printed = true;
         }
 
         public function get_single_helpie_faq_schema_snippet()
@@ -64,7 +72,10 @@ if (!class_exists('\HelpieFaq\Includes\Services\Schema_Snippet')) {
                 'post_id' => $post->ID,
             );
 
-            array_push($helpie_faq_schema_props, $post_schema_props);
+            // Only add post schema props if there's actual content (not just shortcodes)
+            if (!empty(trim($post_content))) {
+                array_push($helpie_faq_schema_props, $post_schema_props);
+            }
 
             $faq_items = $schema_generator->get_faq_items($helpie_faq_schema_props);
             $schema_snippet = $this->get_schema_snippet($faq_items);

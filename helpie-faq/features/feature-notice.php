@@ -50,7 +50,8 @@ if (!class_exists('\HelpieFaq\Features\Feature_Notice')) {
             hfaq_safe_echo($this->get_content());
             echo '</div>';
 
-            echo '<a role="button" class="notice-dismiss helpiefaq-no-underline" href="' . $pluginator_security_agent->add_query_arg(array('helpie_faq_feature_notice_dismissed' => 'true')) . '"></a>';
+            $dismiss_url = $pluginator_security_agent->add_query_arg(array('helpie_faq_feature_notice_dismissed' => 'true', '_wpnonce' => wp_create_nonce('helpie_faq_feature_notice')));
+            echo '<a role="button" class="notice-dismiss helpiefaq-no-underline" href="' . esc_url($dismiss_url) . '"></a>';
             echo '</div>';
         }
 
@@ -66,6 +67,17 @@ if (!class_exists('\HelpieFaq\Features\Feature_Notice')) {
             $notice_dismissed = isset($_GET['helpie_faq_feature_notice_dismissed']) ? sanitize_text_field(wp_unslash($_GET['helpie_faq_feature_notice_dismissed'])) : false;
 
             if ($notice_dismissed) {
+                // Security: Verify nonce and user capability
+                if (!current_user_can('manage_options')) {
+                    return;
+                }
+                
+                // Security: Verify nonce - mandatory to prevent CSRF attacks
+                $nonce = isset($_GET['_wpnonce']) ? sanitize_text_field(wp_unslash($_GET['_wpnonce'])) : '';
+                if (empty($nonce) || !wp_verify_nonce($nonce, 'helpie_faq_feature_notice')) {
+                    return;
+                }
+                
                 update_option($this->dismissed_option_name, HELPIE_FAQ_VERSION);
                 global $pluginator_security_agent;
                 $escape_uri = $pluginator_security_agent->remove_query_arg(array('helpie_faq_feature_notice_dismissed'));
@@ -83,6 +95,17 @@ if (!class_exists('\HelpieFaq\Features\Feature_Notice')) {
 
         public function update_feature_notice_dismissal_data_via_ajax()
         {
+            // Security: Verify nonce and user capability
+            if (!check_ajax_referer('helpie_faq_nonce', 'nonce', false)) {
+                wp_send_json_error(array('message' => 'Invalid security token'), 403);
+                return;
+            }
+
+            if (!current_user_can('manage_options')) {
+                wp_send_json_error(array('message' => 'Insufficient permissions'), 403);
+                return;
+            }
+
             update_option($this->dismissed_option_name, HELPIE_FAQ_VERSION);
 
             $response = array(
@@ -92,7 +115,7 @@ if (!class_exists('\HelpieFaq\Features\Feature_Notice')) {
                 ),
             );
 
-            wp_send_json($response);
+            wp_send_json_success($response);
             wp_die();
         }
     }

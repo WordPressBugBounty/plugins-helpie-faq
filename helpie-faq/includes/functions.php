@@ -170,24 +170,22 @@ if (!function_exists('helpie_error_log')) {
 }
 
 if (!function_exists('helpie_faq_track_event')) {
+    /**
+     * Tracking function - disabled for security/privacy.
+     * Kept as no-op to prevent errors from existing calls.
+     */
     function helpie_faq_track_event($name, $value = null)
     {
-        $dispathcher = new \HelpieFaq\Includes\Tracking\Dispatcher();
-        $can_track = helpie_faq_can_track_user();
-        if (!$can_track) {
-            return;
-        }
-        $dispathcher->send_single_event($name, $value);
+        return;
     }
 }
 
 if (!function_exists('helpie_faq_can_track_user')) {
+    /**
+     * Tracking check - always returns false (tracking disabled).
+     */
     function helpie_faq_can_track_user()
     {
-        global $hf_fs;
-        if (empty($hf_fs)) {
-            return false;
-        }
-        return ($hf_fs->is_registered() && $hf_fs->is_tracking_allowed());
+        return false;
     }
 }

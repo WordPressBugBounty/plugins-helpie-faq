@@ -1,9 +1,9 @@
-=== FAQ / Accordion / Docs / KB – Helpie WordPress FAQ Accordion plugin ===
+=== Helpie FAQ — Accordion, Docs & Knowledge Base ===
 Donate link: http://helpiewp.com/
-Tags: faq, accordion, menu, docs, category accordion 
+Tags: faq, accordion, menu, docs, knowledge-base 
 Requires at least: 5.4
-Tested up to: 6.6.2
-Stable tag: 1.40
+Tested up to: 6.9
+Stable tag: 1.47
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -167,9 +167,9 @@ It automatically brings the most viewed FAQs first to bring the most useful answ
 
 = Minimum Requirements =
 
-* WordPress 4.8 or greater
-* PHP version 5.4 or greater
-* MySQL version 5.0 or greater
+* WordPress 5.4 or greater
+* PHP version 5.6 or greater
+* MySQL version 5.6 or greater
 
 = We recommend your host supports: =
 
@@ -182,9 +182,9 @@ It automatically brings the most viewed FAQs first to bring the most useful answ
 
 1. Install using the WordPress built-in Plugin installer, or Extract the zip file and drop the contents in the `wp-content/plugins/` directory of your WordPress installation.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Go to Pages > Add New
-4. Press the 'Edit with Elementor' button.
-5. Now you can drag and drop widgets from the left panel onto the content area, as well as add new sections and columns that make up the page structure.
+3. Go to Helpie FAQ > Add New to create your first FAQ.
+4. Use the shortcode `[helpie_faq]` to display FAQs on any page or post.
+5. For Elementor users, drag the 'Helpie FAQ' widget onto your page.
 
 == Screenshots ==
 
@@ -204,6 +204,35 @@ It automatically brings the most viewed FAQs first to bring the most useful answ
 14. FAQ Insights to understand customers better (PRO)
 
 == Changelog ==
+
+= 1.47 =
+New Feature: Dual Anchor Format Support - Both slug and ID anchor formats now work simultaneously
+Enhancement: Category headers in "titled view" mode now support anchor scrolling
+Enhancement: Improved anchor scrolling with better timing for accordion animations
+Enhancement: Console debug logging for anchor scrolling troubleshooting
+Fix: Anchor scrolling timing issue when accordion animations are in progress
+Technical: Added data-id attribute to H3 category headers for dual format support
+Technical: Enhanced matchesAnchor() JavaScript function for flexible anchor matching
+Quality: Added 18 comprehensive Playwright tests for anchor functionality
+
+= 1.46 =
+Fix: Further improvements to data handling and validation in AJAX requests
+
+= 1.45 =
+Fix: Elementor Schema - Improved widget instance ID for cache compatibility
+Improvement: General improvements to data handling and validation
+
+= 1.44 =
+Fix: Improved data handling and validation across AJAX endpoints
+
+= 1.43 =
+Fix: WordPress 6.9 compatibility
+
+= 1.42 =
+Update: Svelte version update
+
+= 1.41 =
+Fix: Duplicate schema issue
 
 = 1.40 =
 Fix: Search issue
@@ -772,8 +801,5 @@ You can also place the faq’s using the widgets option in the dashboard -> Appe
 **Can users submit their questions?**
 
 * Yes, Sure. User FAQ submission is a premium feature of Helpie FAQ by which any user can submit their questions and answers which can be added to the FAQ.
-* You can also set the option to directly publish the FAQ or to publish after approval. 
+* You can also set the option to directly publish the FAQ or to publish after approval.
 * Email notifications can also be sent to both the Admin and User.
-
-readme.txt
-Displaying readme.txt.

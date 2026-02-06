@@ -1,1 +1,79 @@
-!function(e,t,o,n){window.csf_gutenberg_blocks&&Object.values(window.csf_gutenberg_blocks).forEach((function(s){var r=e.registerBlockType,c=t.PlainText,i=o.createElement,a=o.RawHTML,d=n.Button;r(s.name,{title:s.gutenberg.title,description:s.gutenberg.description,icon:s.gutenberg.icon||"screenoptions",category:s.gutenberg.category||"widgets",keywords:s.gutenberg.keywords,supports:{html:!1,className:!1,customClassName:!1},attributes:{shortcode:{string:"string",source:"text"}},edit:function(e){return i("div",{className:"csf-shortcode-block"},i(d,{"data-modal-id":s.modal_id,"data-gutenberg-id":s.name,className:"is-secondary csf-shortcode-button",onClick:function(){window.csf_gutenberg_props=e}},s.button_title),i(c,{placeholder:s.gutenberg.placeholder,className:"input-control blocks-shortcode__textarea",onChange:function(t){e.setAttributes({shortcode:t})},value:e.attributes.shortcode}))},save:function(e){return i(a,{},e.attributes.shortcode)}})}))}(window.wp.blocks,window.wp.blockEditor,window.wp.element,window.wp.components);
+/**
+ *
+ * -----------------------------------------------------------
+ *
+ * Codestar Framework Gutenberg Block
+ * A Simple and Lightweight WordPress Option Framework
+ *
+ * -----------------------------------------------------------
+ *
+ */
+( function( blocks, blockEditor, element, components ) {
+
+  if ( !window.csf_gutenberg_blocks ) { return; }
+
+  Object.values(window.csf_gutenberg_blocks).forEach( function( block ) {
+
+    var registerBlockType = blocks.registerBlockType;
+    var PlainText         = blockEditor.PlainText;
+    var createElement     = element.createElement;
+    var RawHTML           = element.RawHTML;
+    var Button            = components.Button;
+
+    registerBlockType(block.name, {
+      title: block.gutenberg.title,
+      description: block.gutenberg.description,
+      icon: block.gutenberg.icon || 'screenoptions',
+      category: block.gutenberg.category || 'widgets',
+      keywords: block.gutenberg.keywords,
+      supports: {
+        html: false,
+        className: false,
+        customClassName: false,
+      },
+      attributes: {
+        shortcode: {
+          string: 'string',
+          source: 'text',
+        }
+      },
+      edit: function (props) {
+        return (
+          createElement('div', {className: 'csf-shortcode-block'},
+
+            createElement(Button, {
+              'data-modal-id': block.modal_id,
+              'data-gutenberg-id': block.name,
+              className: 'is-secondary csf-shortcode-button',
+              onClick: function () {
+                window.csf_gutenberg_props = props;
+              },
+            }, block.button_title ),
+
+            createElement(PlainText, {
+              placeholder: block.gutenberg.placeholder,
+              className: 'input-control blocks-shortcode__textarea',
+              onChange: function (value) {
+                props.setAttributes({
+                  shortcode: value
+                });
+              },
+              value: props.attributes.shortcode
+            })
+
+          )
+        );
+      },
+      save: function (props) {
+        return createElement(RawHTML, {}, props.attributes.shortcode);
+      }
+    });
+
+  });
+
+})(
+  window.wp.blocks,
+  window.wp.blockEditor,
+  window.wp.element,
+  window.wp.components
+);

@@ -29,17 +29,21 @@ if (!class_exists('\HelpieFaq\Features\Insights\Trackers\Event_Tracker')) {
         
 
         public function action(){
+            // Security: Verify nonce to prevent CSRF attacks
+            if (!check_ajax_referer('helpie_faq_nonce', 'nonce', false)) {
+                wp_send_json_error(array('message' => 'Invalid security token'), 403);
+                return;
+            }
+
             // 1. Get data from $_POST
             $postData = $this->process_data();
 
             // 2. Execute counter algo
-            $count = $this->update($postData);
-            
-            // 3. Return ajax value
-            print_r($count);
+            $this->update($postData);
 
-            wp_die(); // this is required to terminate immediately and return a proper response
-            wp_reset_postdata();
+            // 3. Return success status only (not the analytics data)
+            // Note: Returning analytics data was a security vulnerability (CVE-2025-58659)
+            wp_send_json_success();
         }
 
         

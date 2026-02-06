@@ -92,7 +92,8 @@ if (!class_exists('\Stylus\Components\Form')) {
             $html = "<p>";
             $html .= "<label> " . $label . " <br> ";
             $html .= "<span>";
-            $html .= " <input name='faq_question' class='form__text' type='text' required /> ";
+            $html .= " <input name='faq_question' class='form__text' type='text' maxlength='1000' required /> ";
+            $html .= "<span class='helpie-faq-char-count' style='font-size: 12px; color: #666; display: block; text-align: right; margin-top: 5px;'><span class='helpie-faq-char-count-current'>0</span> / 1000 characters</span>";
             $html .= "</span>";
             $html .= "</label>";
             $html .= "</p>";
@@ -122,7 +123,8 @@ if (!class_exists('\Stylus\Components\Form')) {
             $html = "<p>";
             $html .= "<label> " . $label . " <br> ";
             $html .= "<span>";
-            $html .= "<textarea name='faq_answer' class='form__textarea'></textarea>";
+            $html .= "<textarea name='faq_answer' class='form__textarea' maxlength='10000'></textarea>";
+            $html .= "<span class='helpie-faq-char-count' style='font-size: 12px; color: #666; display: block; text-align: right; margin-top: 5px;'><span class='helpie-faq-char-count-current'>0</span> / 10000 characters</span>";
             $html .= "</span>";
             $html .= "</label>";
             $html .= "</p>";

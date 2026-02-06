@@ -55,8 +55,23 @@ if (!class_exists('\HelpieFaq\Features\Insights\Trackers\Search_Tracker')) {
 
         public function update_count($counter_data, $event_data)
         {
+            // Security: Prevent unbounded option growth by limiting stored keys
+            // Limit to top 5000 unique search terms to prevent DoS
+            $max_unique_terms = 5000;
+            if (is_array($counter_data) && count($counter_data) > $max_unique_terms) {
+                // Sort by all-time count and keep only top terms
+                $term_counts = array();
+                foreach ($counter_data as $term => $data) {
+                    $all_time_count = isset($data['all-time']) ? (int) $data['all-time'] : 0;
+                    $term_counts[$term] = $all_time_count;
+                }
+                arsort($term_counts);
+                $top_terms = array_slice(array_keys($term_counts), 0, $max_unique_terms, true);
+                $counter_data = array_intersect_key($counter_data, array_flip($top_terms));
+            }
 
-            update_option($this->option_name, $counter_data);
+            // Store with autoload disabled to prevent memory bloat
+            update_option($this->option_name, $counter_data, false);
         }
 
         public function get_event_data($postData)
@@ -159,8 +174,15 @@ if (!class_exists('\HelpieFaq\Features\Insights\Trackers\Search_Tracker')) {
             );
             $sanitized_data = hfaq_get_sanitized_data("POST", $validation_map);
             $searchTerm = isset($sanitized_data['searchTerm']) ? $sanitized_data['searchTerm'] : '';
+            
+            // Security: Limit search term length to prevent DoS via unbounded option growth
+            $max_search_length = 256;
             if (!empty($searchTerm)) {
-                $postData['searchTerm'] = $searchTerm;
+                // Trim and limit length
+                $searchTerm = substr(trim($searchTerm), 0, $max_search_length);
+                if (!empty($searchTerm)) {
+                    $postData['searchTerm'] = $searchTerm;
+                }
             }
 
             return $postData;

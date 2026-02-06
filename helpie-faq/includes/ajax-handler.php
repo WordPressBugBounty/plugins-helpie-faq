@@ -12,17 +12,22 @@ if ( !class_exists( '\\HelpieFaq\\Includes\\Ajax_Handler' ) ) {
         }
 
         public function action() {
-            $this->insights_controller = new \HelpieFaq\Features\Insights\Controller();
-            $this->insights_controller->clear();
-        }
-
-        public function track_shortcodes_and_widgets() {
-            $event_name = ( isset( $_REQUEST['event_name'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['event_name'] ) ) : '' );
-            $event_value = ( isset( $_REQUEST['event_value'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['event_value'] ) ) : '' );
-            if ( empty( $event_name ) || empty( $event_value ) ) {
-                return;
+            // Security check: verify nonce and user capability
+            if ( !check_ajax_referer( 'helpie_faq_nonce', 'nonce', false ) ) {
+                wp_send_json_error( array(
+                    'message' => 'Invalid security token',
+                ), 403 );
             }
-            helpie_faq_track_event( $event_name, $event_value );
+            if ( !current_user_can( 'manage_options' ) ) {
+                wp_send_json_error( array(
+                    'message' => 'Insufficient permissions',
+                ), 403 );
+            }
+            $insights_controller = new \HelpieFaq\Features\Insights\Controller();
+            $insights_controller->clear();
+            wp_send_json_success( array(
+                'message' => 'Insights cleared successfully',
+            ) );
         }
 
     }
@@ -37,7 +42,6 @@ add_action( 'wp_ajax_nopriv_helpie_faq_click_counter', array($click_tracker, 'ac
 add_action( 'wp_ajax_helpie_faq_search_counter', array($search_tracker, 'action') );
 add_action( 'wp_ajax_nopriv_helpie_faq_search_counter', array($search_tracker, 'action') );
 add_action( 'wp_ajax_helpie_faq_reset_insights', array($ajax_hanlder, 'action') );
-add_action( 'wp_ajax_nopriv_helpie_faq_reset_insights', array($ajax_hanlder, 'action') );
-add_action( 'wp_ajax_helpie_faq_track_shortcodes_and_widgets', array($ajax_hanlder, 'track_shortcodes_and_widgets') );
-add_action( 'wp_ajax_nopriv_helpie_faq_track_shortcodes_and_widgets', array($ajax_hanlder, 'track_shortcodes_and_widgets') );
+// Removed: wp_ajax_nopriv_helpie_faq_reset_insights - reset insights requires admin authentication (CVE-2025-58659)
+// Removed: wp_ajax_helpie_faq_track_shortcodes_and_widgets - Mixpanel tracking removed
 add_action( 'wp_ajax_update_feature_notice_dismissal_data_via_ajax', array(new \HelpieFaq\Features\Feature_Notice(), 'update_feature_notice_dismissal_data_via_ajax') );

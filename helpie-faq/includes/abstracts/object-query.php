@@ -70,6 +70,15 @@ abstract class Object_Query
         $this->query_vars[$query_var] = $value;
     }
     /**
+     * Set multiple query variables at once.
+     *
+     * @param array $query_vars Array of query variables to set.
+     */
+    public function set_query_vars($query_vars)
+    {
+        $this->query_vars = wp_parse_args($query_vars, $this->query_vars);
+    }
+    /**
      * Get the default allowed query vars.
      *
      * @return array

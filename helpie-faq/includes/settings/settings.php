@@ -12,7 +12,13 @@ if (!class_exists('\HelpieFaq\Includes\Settings\Settings')) {
 
         public function __construct()
         {
-            add_action('csf_loaded', [$this, 'init_settings'], 10, 1);
+            // If csf_loaded has already fired, call init_settings directly
+            // Otherwise, hook into csf_loaded to initialize later
+            if (did_action('csf_loaded')) {
+                $this->init_settings();
+            } else {
+                add_action('csf_loaded', [$this, 'init_settings']);
+            }
 
             /*** In the free version use this hook to update the default settings option when submitting the settings form */
             add_action("csf_helpie-faq_save_after", [$this, 'update_default_options'], 10, 2);

@@ -56,7 +56,18 @@ if (!class_exists('\Stylus\Components\Accordion')) {
             $title_icon = $this->get_the_title_icon($collectionProps, 'category_title_icon');
             for ($ii = 0; $ii < sizeof($props); $ii++) {
                 $title_content = $this->get_the_title_content($props[$ii]['title']);
-                $html .= "<h3 class='accordion__heading accordion__category'>" . $title_icon . $title_content . "</h3>";
+                
+                // Generate anchor attributes for categories to support anchor linking (both slug and ID formats)
+                $url_attribute = $this->get_url_attribute($props[$ii], $collectionProps);
+                $term_id = isset($props[$ii]['term_id']) ? $props[$ii]['term_id'] : '';
+                $anchor_id = 'term-' . $term_id;
+                
+                // Add data-item (slug), data-id (ID), and id attributes to support both anchor formats
+                $data_item_attr = !empty($url_attribute) ? ' data-item="' . esc_attr($url_attribute) . '"' : '';
+                $data_id_attr = !empty($anchor_id) ? ' data-id="' . esc_attr($anchor_id) . '"' : '';
+                $id_attr = !empty($anchor_id) ? ' id="accordion-header-' . esc_attr($anchor_id) . '"' : '';
+                
+                $html .= "<h3 class='accordion__heading accordion__category'" . $id_attr . $data_item_attr . $data_id_attr . ">" . $title_icon . $title_content . "</h3>";
                 $children = isset($props[$ii]['children']) ? $props[$ii]['children'] : [];
                 if (empty($children)) {
                     continue;
@@ -287,7 +298,23 @@ if (!class_exists('\Stylus\Components\Accordion')) {
                 return;
             }
 
-            $id = isset($props['post_id']) ? "post-" . $props['post_id'] : "term-" . $props['term_id'];
+            /**
+             * Some renderers (e.g. Elementor Dynamic Widget) use post_id=0 (no real WP post).
+             * If we use "post-0" as the anchor ID, every item collides, and schema + URL anchors break.
+             */
+            $post_id = isset($props['post_id']) ? intval($props['post_id']) : 0;
+            $term_id = isset($props['term_id']) ? intval($props['term_id']) : 0;
+
+            if ($post_id > 0) {
+                $id = "post-" . $post_id;
+            } elseif ($term_id > 0) {
+                $id = "term-" . $term_id;
+            } else {
+                $title_for_id = isset($props['title']) ? \wp_strip_all_tags($props['title']) : '';
+                $content_for_id = isset($props['content']) ? \wp_strip_all_tags($props['content']) : '';
+                $id = 'dyn-' . substr(md5($title_for_id . '|' . $content_for_id), 0, 12);
+            }
+
             $id = esc_attr($id);
             $url_type = isset($collectionProps['faq_url_type']) ? $collectionProps['faq_url_type'] : 'post_id';
 

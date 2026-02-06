@@ -69,14 +69,16 @@ if ( !class_exists( '\\HelpieFaq\\Features\\Helpie_Menu\\Init' ) ) {
          */
         private function get_current_post_type( $post = null ) {
             // Method 1: Try to get post_type from URL parameter
-            $post_type = ( isset( $_GET['post_type'] ) ? $_GET['post_type'] : '' );
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading post_type for display context only
+            $post_type = ( isset( $_GET['post_type'] ) ? sanitize_key( $_GET['post_type'] ) : '' );
             // Method 2: If not in URL, try to get from global $typenow
             if ( empty( $post_type ) && isset( $GLOBALS['typenow'] ) ) {
-                $post_type = $GLOBALS['typenow'];
+                $post_type = sanitize_key( $GLOBALS['typenow'] );
             }
             // Method 3: If editing a post, get post type from post ID
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading post ID for display context only
             if ( empty( $post_type ) && isset( $_GET['post'] ) ) {
-                $post_id = (int) $_GET['post'];
+                $post_id = absint( $_GET['post'] );
                 // Access WordPress functions through global scope
                 global $wpdb;
                 if ( $post_id > 0 ) {

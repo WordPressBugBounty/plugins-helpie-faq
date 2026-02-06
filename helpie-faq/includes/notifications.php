@@ -65,6 +65,11 @@ if (!class_exists('\HelpieFaq\Includes\Notifications')) {
 
         public function notice_click_handler()
         {
+            // Security: Verify user capability
+            if (!current_user_can('manage_options')) {
+                return;
+            }
+
             /* 1. If button clicked is 'Dismiss' button */
 
             $validation_map = array();
@@ -75,6 +80,12 @@ if (!class_exists('\HelpieFaq\Includes\Notifications')) {
             $dismiss_param = isset($sanitized_data[$this->dismiss_param]) ? $sanitized_data[$this->dismiss_param] : '';
 
             if (!empty($dismiss_param)) {
+                // Security: Verify nonce - mandatory to prevent CSRF attacks
+                $nonce = isset($_GET['_wpnonce']) ? sanitize_text_field(wp_unslash($_GET['_wpnonce'])) : '';
+                if (empty($nonce) || !wp_verify_nonce($nonce, 'helpie_faq_rating_notice')) {
+                    return;
+                }
+                
                 update_option($this->dismiss_param, true);
                 global $pluginator_security_agent;
                 $escape_uri = $pluginator_security_agent->remove_query_arg($this->dismiss_param);
@@ -85,6 +96,12 @@ if (!class_exists('\HelpieFaq\Includes\Notifications')) {
             $maybe_param = isset($sanitized_data[$this->maybe_param]) ? $sanitized_data[$this->maybe_param] : '';
 
             if (!empty($maybe_param)) {
+                // Security: Verify nonce - mandatory to prevent CSRF attacks
+                $nonce = isset($_GET['_wpnonce']) ? sanitize_text_field(wp_unslash($_GET['_wpnonce'])) : '';
+                if (empty($nonce) || !wp_verify_nonce($nonce, 'helpie_faq_rating_notice')) {
+                    return;
+                }
+                
                 $number_of_faqs = $this->get_faq_count();
                 update_option($this->maybe_param, $number_of_faqs);
                 global $pluginator_security_agent;
@@ -111,8 +128,10 @@ if (!class_exists('\HelpieFaq\Includes\Notifications')) {
             $html .= "<p>" . "<b>" . __("Congrats!") . " " . $rounded_faqs . "+" . __("FAQs Created: ") . "</b>" . __("Hey, I noticed you have created more than") . " " . $rounded_faqs . " " . __("FAQs using Helpie FAQ - that's awesome! ", 'helpie-faq') . "</p>";
             $html .= "<p>" . __("Could you do me a favor and rate us with 5-stars. It would be such a motivation for us to keep improving the plugin.", 'helpie-faq') . "</p>";
             $html .= "<p><a class='success-button' target='_blank' href='" . esc_url_raw('https://wordpress.org/support/plugin/helpie-faq/reviews/#new-post') . "'>OK. You deserve it</a>";
-            $html .= "<p><a href='" . $pluginator_security_agent->add_query_arg(array($this->maybe_param => 'true')) . "'>Nope. Maybe later</a>";
-            $html .= "<p><a href='" . $pluginator_security_agent->add_query_arg(array($this->dismiss_param => 'true')) . "'>I already did</a>";
+            $maybe_url = $pluginator_security_agent->add_query_arg(array($this->maybe_param => 'true', '_wpnonce' => wp_create_nonce('helpie_faq_rating_notice')));
+            $html .= "<p><a href='" . esc_url($maybe_url) . "'>Nope. Maybe later</a>";
+            $dismiss_url = $pluginator_security_agent->add_query_arg(array($this->dismiss_param => 'true', '_wpnonce' => wp_create_nonce('helpie_faq_rating_notice')));
+            $html .= "<p><a href='" . esc_url($dismiss_url) . "'>I already did</a>";
             $html .= "</div>";
 
             hfaq_safe_echo($html);

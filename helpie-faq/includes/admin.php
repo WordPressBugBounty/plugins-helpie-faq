@@ -86,7 +86,7 @@ if (!class_exists('\HelpieFaq\Includes\Admin')) {
                 'site_url' => get_site_url(),
                 'rest_nonce' => $rest_nonce,
                 'trial_url' => hf_fs()->get_trial_url(),
-                'faq_plan' => hf_fs()->can_use_premium_code__premium_only() ? 'premium' : 'free',
+                'faq_plan' => apply_filters('helpie_faq_is_premium', hf_fs()->can_use_premium_code__premium_only()) ? 'premium' : 'free',
                 'supported_plugins' => array(
                     'woocommerce' => class_exists('woocommerce') ? 'active' : 'inactive',
                     'tutor_lms' => class_exists('\TUTOR\Tutor') ? 'active' : 'inactive',

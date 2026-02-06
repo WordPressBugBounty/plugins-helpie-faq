@@ -65,10 +65,13 @@ if (!class_exists('\HelpieFaq\Features\Insights\Controller')) {
             return $insights;
         }
 
-        // public function clear()
-        // {
-        //     $this->click_insights->clear();
-        //     $this->search_insights->clear();
-        // }
+        public function clear()
+        {
+            $click_insights = new \HelpieFaq\Features\Insights\Insights\Click_Insights();
+            $click_insights->clear();
+
+            $search_insights = new \HelpieFaq\Features\Insights\Insights\Search_Insights();
+            $search_insights->clear();
+        }
     } // END CLASS
 }

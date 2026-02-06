@@ -82,3 +82,61 @@ $helpie_faq_shortcodes = new \HelpieFaq\Includes\Shortcodes();
 add_shortcode('helpie_faq', array($helpie_faq_shortcodes, 'basic'));
 add_shortcode('helpie_menu', array($helpie_faq_shortcodes, 'helpie_menu_shortcode'));
 // add_shortcode('helpie_notices', array($helpie_faq_shortcodes, 'notices'));
+
+/**
+ * E2E-only shortcode for Playwright regression coverage.
+ *
+ * This simulates the Elementor "Helpie FAQ - Dynamically Added FAQ" widget render path
+ * without requiring Elementor to be installed in the Docker/CI environment.
+ *
+ * Enabled only when HELPIE_FAQ_E2E is defined (set in docker-compose.yml).
+ *
+ * Usage:
+ *   [helpie_faq_dynamic_e2e faqs="Q1::A1||Q2::A2" /]
+ */
+if (defined('HELPIE_FAQ_E2E') && HELPIE_FAQ_E2E) {
+    add_shortcode('helpie_faq_dynamic_e2e', function ($atts) {
+        $atts = shortcode_atts([
+            'faqs' => '',
+            // Keep url attribute on so schema + anchors can be validated.
+            'faq_url_attribute' => 1,
+        ], $atts);
+
+        $raw = is_string($atts['faqs']) ? $atts['faqs'] : '';
+        $raw = trim($raw);
+        if (empty($raw)) {
+            return '';
+        }
+
+        $faq_items = [];
+        $pairs = explode('||', $raw);
+        foreach ($pairs as $pair) {
+            $pair = trim($pair);
+            if (empty($pair)) {
+                continue;
+            }
+            $parts = explode('::', $pair, 2);
+            $title = isset($parts[0]) ? trim($parts[0]) : '';
+            $content = isset($parts[1]) ? trim($parts[1]) : '';
+            if ($title === '' || $content === '') {
+                continue;
+            }
+            $faq_items[] = [
+                'tab_title' => $title,
+                'tab_content' => $content,
+            ];
+        }
+
+        if (empty($faq_items)) {
+            return '';
+        }
+
+        $args = [
+            'faqs' => $faq_items,
+            'faq_url_attribute' => $atts['faq_url_attribute'],
+        ];
+
+        $dynamic = new \HelpieFaq\Features\Faq\Dynamic_Widget\Faq();
+        return $dynamic->get_view($args);
+    });
+}

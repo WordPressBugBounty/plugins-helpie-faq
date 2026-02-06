@@ -57,7 +57,7 @@ if (!class_exists('\HelpieFaq\Includes\Services\Schema_Service')) {
             $schema = '<script type="application/ld+json" class="helpie-faq-schema">{
                     "@context": "https://schema.org",
                     "@type": "FAQPage",
-                    "mainEntity": ' . wp_json_encode($faq_entity_data) . '
+                    "mainEntity": ' . \wp_json_encode($faq_entity_data) . '
                 }</script>';
 
             return $schema;
@@ -69,32 +69,50 @@ if (!class_exists('\HelpieFaq\Includes\Services\Schema_Service')) {
             $items = $this->get_faqs_only($viewProps);
             $faqs = [];
             // $permalink = get_permalink() . '#hfaq-';
-            $permalink = get_permalink();
+            $permalink = \get_permalink();
 
             $faq_url_attribute_enabled = false;
 
-            if (isset($viewProps['collection']['faq_url_attribute'])
-                && $viewProps['collection']['faq_url_attribute'] == 1) {
-                $faq_url_attribute_enabled = true;
+            if (isset($viewProps['collection']['faq_url_attribute'])) {
+                $faq_url_value = $viewProps['collection']['faq_url_attribute'];
+                // Handle different value formats: boolean true, integer 1, string 'on' or '1'
+                $faq_url_attribute_enabled = ($faq_url_value === true || $faq_url_value === 1 || $faq_url_value === 'on' || $faq_url_value === '1');
             }
 
             for ($ii = 0; $ii < count($items); $ii++) {
 
-                $faq_item_content = wp_strip_all_tags($items[$ii]['content']);
+                $faq_item_content = \wp_strip_all_tags($items[$ii]['content']);
                 $faq_item_content = preg_replace('#\[[^\]]+\]#', '', $faq_item_content);
 
                 if (!empty($faq_item_content)) {
 
-                    $id = isset($items[$ii]['post_id']) ? "post-" . $items[$ii]['post_id'] : "term-" . $items[$ii]['term_id'];
+                    /**
+                     * IMPORTANT:
+                     * Some renderers (e.g. Elementor Dynamic Widget) don't have real WP post IDs and use post_id = 0.
+                     * If we key schema items by post_id=0, every question collapses into a single entry.
+                     * So we must generate a stable-ish unique ID when post_id/term_id are not valid (>0).
+                     */
+                    $post_id = isset($items[$ii]['post_id']) ? intval($items[$ii]['post_id']) : 0;
+                    $term_id = isset($items[$ii]['term_id']) ? intval($items[$ii]['term_id']) : 0;
+
+                    if ($post_id > 0) {
+                        $id = "post-" . $post_id;
+                    } elseif ($term_id > 0) {
+                        $id = "term-" . $term_id;
+                    } else {
+                        $title_for_id = isset($items[$ii]['title']) ? \wp_strip_all_tags($items[$ii]['title']) : '';
+                        // Include index so identical Q/A pairs don't collide within the same page render.
+                        $id = 'dyn-' . substr(md5($ii . '|' . $title_for_id . '|' . $faq_item_content), 0, 12);
+                    }
 
                     if ($faq_url_attribute_enabled == true) {
-                        $permalink = get_permalink() . '#hfaq-' . $id;
+                        $permalink = \get_permalink() . '#hfaq-' . $id;
                     }
 
                     $faqs[$id] = array(
                         '@type' => 'Question',
                         'url' => $permalink,
-                        'name' => wp_strip_all_tags($items[$ii]['title']),
+                        'name' => \wp_strip_all_tags($items[$ii]['title']),
                         'acceptedAnswer' => array(
                             '@type' => 'Answer',
                             'text' => $faq_item_content,

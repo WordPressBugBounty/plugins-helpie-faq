@@ -249,20 +249,22 @@ if (!class_exists('\HelpieFaq\Features\Insights\Insights\Abstract_Insight')) {
 
         protected function skip_condition($info)
         {
-            extract($info);
-            if ($count_by == 'days') {
+            $count_by = isset($info['count_by']) ? $info['count_by'] : '';
+            $date_key = isset($info['date_key']) ? $info['date_key'] : '';
+            $days = isset($info['days']) ? $info['days'] : 0;
+
+            if ($count_by === 'days') {
                 $condition1 = $this->is_day_date($date_key);
                 $condition2 = $this->insights_helper->is_last_n_days($this->current_timestamp, $date_key, $days);
 
                 return !($condition1 && $condition2);
             }
 
-            if ($count_by == 'months') {
+            if ($count_by === 'months') {
                 return !$this->is_month_within_12_months($date_key);
             }
 
             return false;
-
         }
         public function get_most_frequent_terms_last_year()
         {

@@ -18,11 +18,28 @@ if (!class_exists('\HelpieFaq\Features\Pagination\Handler')) {
 
         public function get_shortcode_faqs()
         {
+            // Security: Verify nonce to prevent CSRF attacks
+            if (!check_ajax_referer('helpie_faq_nonce', 'nonce', false)) {
+                wp_send_json_error(array('message' => 'Invalid security token'), 403);
+                return;
+            }
+
             $sanitized_data = hfaq_get_sanitized_data("REQUEST", "READ_ALL_AS_TEXT");
             $faq_model = new \HelpieFaq\Features\Faq\Faq_Model();
             $defaults = $faq_model->get_default_args();
             $args = array_merge($defaults, $sanitized_data);
-            $limit = $sanitized_data['limit'];
+            $limit = isset($sanitized_data['limit']) ? absint($sanitized_data['limit']) : 10;
+            
+            // Security: Validate minimum limit value to prevent query issues
+            if ($limit < 1) {
+                $limit = 10;
+            }
+            
+            // Security: Limit maximum items returned to prevent DoS
+            if ($limit > 500) {
+                $limit = 500;
+            }
+            
             /** add an offset value to get the faqs to the currentpage */
             // $args['offset'] = $page * $args['limit'];
             $args['limit'] = -1;
@@ -43,9 +60,8 @@ if (!class_exists('\HelpieFaq\Features\Pagination\Handler')) {
             // error_log('[$view_props] : ' . print_r($view_props, true));
 
             $view_props['collection'] = $this->get_required_collection_props($view_props['collection']);
-            wp_send_json(
+            wp_send_json_success(
                 [
-                    'status' => 'success',
                     // 'content' => $content,
                     'view_props' => $view_props,
                 ]

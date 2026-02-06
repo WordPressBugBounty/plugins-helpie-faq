@@ -36,11 +36,17 @@ if (!class_exists('\HelpieFaq\Includes\Store\Faq_Store')) {
 
         protected function filter_faq_categories($args)
         {
-            if (isset($args['categories']) && $args['categories'] != 'all'
+            if (isset($args['categories']) && $args['categories'] != 'all' && $args['categories'] != ''
                 && (!isset($args['group_id']) && empty($args['group_id']))) {
                 // Because Elementor gives array but shortcode and widgets give string
                 $terms_array = $this->to_array($args['categories']);
-                $this->add_tax_query('helpie_faq_category', $terms_array);
+                // Convert names/slugs to term IDs if needed
+                $term_ids = $this->convert_terms_to_ids($terms_array, 'helpie_faq_category');
+                // If no valid term IDs found, use 0 to return no results
+                if (empty($term_ids)) {
+                    $term_ids = array(0);
+                }
+                $this->add_tax_query('helpie_faq_category', $term_ids);
             }
         }
 
@@ -49,14 +55,25 @@ if (!class_exists('\HelpieFaq\Includes\Store\Faq_Store')) {
             if (isset($args['tags']) && $args['tags'] != '') {
                 // Because Elementor gives array but shortcode and widgets give string
                 $terms_array = $this->to_array($args['tags']);
-                $this->add_tax_query('helpie_faq_tag', $terms_array);
+                // Convert names/slugs to term IDs if needed
+                $term_ids = $this->convert_terms_to_ids($terms_array, 'helpie_faq_tag');
+                // If no valid term IDs found, use 0 to return no results
+                if (empty($term_ids)) {
+                    $term_ids = array(0);
+                }
+                $this->add_tax_query('helpie_faq_tag', $term_ids);
             }
         }
 
         protected function filter_limit($args)
         {
             if (isset($args['limit']) && $args['limit'] != '' && $args['limit'] != '-1') {
-                $this->wp_query_args['posts_per_page'] = $args['limit'];
+                $limit = absint($args['limit']);
+                // Security: Validate minimum limit value to prevent query issues
+                if ($limit < 1) {
+                    $limit = 10;
+                }
+                $this->wp_query_args['posts_per_page'] = $limit;
             }
         }
 
@@ -75,12 +92,17 @@ if (!class_exists('\HelpieFaq\Includes\Store\Faq_Store')) {
             /* NOTE: Check for Helpie KB Plugin */
             include_once ABSPATH . 'wp-admin/includes/plugin.php';
             if (\is_plugin_active('helpie/helpie.php')) {
-                if (isset($args['kb_categories']) && $args['kb_categories'] != 'all') {
+                if (isset($args['kb_categories']) && $args['kb_categories'] != 'all' && $args['kb_categories'] != '') {
 
                     // Because Elementor gives array but shortcode and widgets give string
                     $terms_array = $this->to_array($args['kb_categories']);
-
-                    $this->add_tax_query('helpdesk_category', $terms_array);
+                    // Convert names/slugs to term IDs if needed
+                    $term_ids = $this->convert_terms_to_ids($terms_array, 'helpdesk_category');
+                    // If no valid term IDs found, use 0 to return no results
+                    if (empty($term_ids)) {
+                        $term_ids = array(0);
+                    }
+                    $this->add_tax_query('helpdesk_category', $term_ids);
                 }
             }
         }
@@ -169,6 +191,19 @@ if (!class_exists('\HelpieFaq\Includes\Store\Faq_Store')) {
             }
 
             return $array;
+        }
+
+        /**
+         * Convert term names/slugs to term IDs
+         * Wrapper for shared Helpers utility
+         *
+         * @param array $terms Array of term values (can be term IDs or names/slugs)
+         * @param string $taxonomy Taxonomy name
+         * @return array Array of term IDs
+         */
+        protected function convert_terms_to_ids($terms, $taxonomy)
+        {
+            return \HelpieFaq\Includes\Utils\Helpers::convert_terms_to_ids($terms, $taxonomy);
         }
     } // END CLASS
 }
