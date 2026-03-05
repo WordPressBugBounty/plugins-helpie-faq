@@ -73,7 +73,7 @@ if (!class_exists('\HelpieFaq\Features\Pagination\Handler')) {
             $itemsProps = isset($view_props['items']) && !empty($view_props['items']) ? $view_props['items'] : [];
             $collectionProps = isset($view_props['collection']) && !empty($view_props['collection']) ? $view_props['collection'] : [];
             foreach ($itemsProps as $index => $props) {
-                $props['content'] = apply_filters('helpie_faq/the_content', array(
+                $itemsProps[$index]['content'] = apply_filters('helpie_faq/the_content', array(
                     'props' => $props,
                     'collectionProps' => $collectionProps,
                 ));

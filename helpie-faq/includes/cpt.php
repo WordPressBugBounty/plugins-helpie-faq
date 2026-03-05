@@ -111,13 +111,14 @@ if ( !class_exists( '\\HelpieFaq\\Includes\\Cpt' ) ) {
                 'menu_name'         => __( 'FAQ Category', 'helpie-faq' ),
             );
             $args = array(
-                'hierarchical'      => true,
-                'labels'            => $labels,
-                'show_ui'           => true,
-                'show_in_rest'      => true,
-                'show_admin_column' => true,
-                'query_var'         => true,
-                'rewrite'           => array(
+                'hierarchical'       => true,
+                'labels'             => $labels,
+                'show_ui'            => true,
+                'show_in_rest'       => true,
+                'show_in_quick_edit' => false,
+                'show_admin_column'  => true,
+                'query_var'          => true,
+                'rewrite'            => array(
                     'slug'       => 'helpie_faq_category',
                     'with_front' => false,
                 ),
@@ -171,16 +172,17 @@ if ( !class_exists( '\\HelpieFaq\\Includes\\Cpt' ) ) {
                 'menu_name'         => __( 'All FAQ Groups', HELPIE_FAQ_DOMAIN ),
             );
             $args = array(
-                'hierarchical'      => false,
-                'labels'            => $labels,
-                'show_ui'           => true,
-                'show_in_rest'      => true,
-                'show_admin_column' => true,
-                'query_var'         => true,
-                'parent_item'       => null,
-                'parent_item_colon' => null,
-                'meta_box_cb'       => false,
-                'rewrite'           => array(
+                'hierarchical'       => false,
+                'labels'             => $labels,
+                'show_ui'            => true,
+                'show_in_rest'       => true,
+                'show_in_quick_edit' => false,
+                'show_admin_column'  => true,
+                'query_var'          => true,
+                'parent_item'        => null,
+                'parent_item_colon'  => null,
+                'meta_box_cb'        => false,
+                'rewrite'            => array(
                     'slug'       => $group_slug,
                     'with_front' => false,
                 ),

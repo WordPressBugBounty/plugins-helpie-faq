@@ -3,7 +3,7 @@ Donate link: http://helpiewp.com/
 Tags: faq, accordion, menu, docs, knowledge-base 
 Requires at least: 5.4
 Tested up to: 6.9
-Stable tag: 1.47
+Stable tag: 1.48
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -204,6 +204,11 @@ It automatically brings the most viewed FAQs first to bring the most useful answ
 14. FAQ Insights to understand customers better (PRO)
 
 == Changelog ==
+
+= 1.48 =
+Fix: Various bug fixes and improvements
+Enhancement: Admin scripts only load on Helpie FAQ pages for better performance
+Accessibility: Added ARIA attributes and keyboard navigation to accordions
 
 = 1.47 =
 New Feature: Dual Anchor Format Support - Both slug and ID anchor formats now work simultaneously

@@ -74,6 +74,20 @@ if (!class_exists('\HelpieFaq\Includes\Admin')) {
 
         public function enqueue_scripts()
         {
+            $screen = get_current_screen();
+            if ( $screen ) {
+                $is_helpie_page = in_array( $screen->id, array(
+                    'helpie_faq', 'edit-helpie_faq', 'edit-helpie_faq_category',
+                    'edit-helpie_faq_group', 'helpie_menu', 'edit-helpie_menu',
+                    'helpie_faq_page_helpie-review-settings', 'helpie_faq_page_helpie-faq-onboarding',
+                ), true )
+                    || ( isset( $screen->post_type ) && in_array( $screen->post_type, array( 'helpie_faq', 'helpie_menu' ), true ) );
+
+                if ( ! $is_helpie_page ) {
+                    return;
+                }
+            }
+
             wp_enqueue_style($this->plugin_domain . '-bundle-styles', HELPIE_FAQ_URL . 'assets/bundles/admin.app.css', array(), $this->version, 'all');
             wp_enqueue_script($this->plugin_domain . '-bundle-admin-scripts', HELPIE_FAQ_URL . 'assets/bundles/admin.app.js', array('jquery'), $this->version, 'all');
 

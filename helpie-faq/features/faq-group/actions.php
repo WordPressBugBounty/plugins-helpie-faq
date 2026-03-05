@@ -43,6 +43,11 @@ if (!class_exists('\HelpieFaq\Features\Faq_Group\Actions')) {
             add_action('save_post', array($faq_repository, 'save_post'), 10, 3);
 
             add_action('edit_post', function ($postId) use ($faq_repository) {
+                $action = isset($_POST['action']) ? sanitize_text_field(wp_unslash($_POST['action'])) : '';
+                if ('inline-save' === $action) {
+                    return;
+                }
+
                 global $post;
                 $post_type = isset($post) ? $post->post_type : get_post_type($postId);
                 if (is_null($post) || empty($post) || $post_type != HELPIE_FAQ_POST_TYPE) {

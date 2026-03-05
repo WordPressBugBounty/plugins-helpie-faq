@@ -15,6 +15,25 @@ if ( !class_exists( '\\HelpieFaq\\Features\\Insights\\View' ) ) {
         }
 
         public function enqueue_scripts() {
+            return;
+            $screen = get_current_screen();
+            if ( !$screen || false === strpos( $screen->id, 'helpie-faq' ) ) {
+                return;
+            }
+            wp_enqueue_script(
+                HELPIE_FAQ_DOMAIN . '-chartist',
+                HELPIE_FAQ_URL . 'assets/libs/chartist/chartist.min.js',
+                array('jquery'),
+                HELPIE_FAQ_VERSION,
+                'all'
+            );
+            wp_enqueue_style(
+                HELPIE_FAQ_DOMAIN . '-chartist-style',
+                HELPIE_FAQ_URL . 'assets/libs/chartist/chartist.min.css',
+                array(),
+                HELPIE_FAQ_VERSION,
+                'all'
+            );
         }
 
         public function get_view( $insights ) {

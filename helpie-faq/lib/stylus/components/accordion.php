@@ -268,8 +268,8 @@ if (!class_exists('\Stylus\Components\Accordion')) {
                 && isset($collectionProps['toggle_off']) && !empty($collectionProps['toggle_off'])
             ) {
                 $html .= '<span class="accordion__toggle ' . esc_attr($toggle_classes) . '">';
-                $html .= '<span class="accordion__toggle--open"><i class="accordion__toggle-icons ' . esc_attr($collectionProps['toggle_open']) . '"></i></span>';
-                $html .= '<span class="accordion__toggle--close"><i class="accordion__toggle-icons ' . esc_attr($collectionProps['toggle_off']) . '"></i></span>';
+                $html .= '<span class="accordion__toggle--open"><i class="accordion__toggle-icons ' . esc_attr($collectionProps['toggle_open']) . '" aria-hidden="true"></i></span>';
+                $html .= '<span class="accordion__toggle--close"><i class="accordion__toggle-icons ' . esc_attr($collectionProps['toggle_off']) . '" aria-hidden="true"></i></span>';
                 $html .= '</span>';
             }
             return $html;
@@ -340,7 +340,7 @@ if (!class_exists('\Stylus\Components\Accordion')) {
             // $position = isset($collectionProps['title_icon_position']) && !empty($collectionProps['title_icon_position']) ? $collectionProps['title_icon_position'] : 'left';
             // accordion__title-iconPosition--' . $position . '
 
-            $content = '<span class="accordion__title-icon "><i class="faq-title-icon ' . esc_attr($icon) . '"></i></span>';
+            $content = '<span class="accordion__title-icon "><i class="faq-title-icon ' . esc_attr($icon) . '" aria-hidden="true"></i></span>';
             return $content;
         }
 

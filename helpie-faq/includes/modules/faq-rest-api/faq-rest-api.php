@@ -190,7 +190,7 @@ if (!class_exists('\HelpieFaq\Includes\Modules\Faq_Rest_Api\Faq_Rest_Api')) {
 
         public function api_access_permission()
         {
-            if (current_user_can('edit_posts')) {
+            if (current_user_can('manage_categories')) {
                 return true;
             }
             $error_code = "UNAUTHORIZED";

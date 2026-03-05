@@ -68,11 +68,13 @@ if ( !class_exists( '\\HelpieFaq\\Features\\Faq\\Faq_View' ) ) {
 
         private function is_faq_search_enabled( $viewProps ) {
             if ( is_singular( 'product' ) ) {
-                if ( isset( $viewProps['collection']['woo_search_show'] ) && $viewProps['collection']['woo_search_show'] ) {
+                $woo_show = ( isset( $viewProps['collection']['woo_search_show'] ) ? $viewProps['collection']['woo_search_show'] : false );
+                if ( $woo_show && $woo_show !== 'off' && $woo_show !== '0' ) {
                     return true;
                 }
             } else {
-                if ( isset( $viewProps['collection']['show_search'] ) && $viewProps['collection']['show_search'] ) {
+                $show_search = ( isset( $viewProps['collection']['show_search'] ) ? $viewProps['collection']['show_search'] : false );
+                if ( $show_search && $show_search !== 'off' && $show_search !== '0' ) {
                     return true;
                 }
             }

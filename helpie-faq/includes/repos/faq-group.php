@@ -178,8 +178,8 @@ if ( !class_exists( '\\HelpieFaq\\Includes\\Repos\\Faq_Group' ) ) {
         }
 
         public function get_faq_group_items( $term_id ) {
-            $term_meta = get_term_meta( $term_id, 'helpie_faq_group_items' );
-            $faq_group_items = ( isset( $term_meta[0]['faq_groups'] ) ? $term_meta[0]['faq_groups'] : [] );
+            $term_meta = get_term_meta( $term_id, 'helpie_faq_group_items', true );
+            $faq_group_items = ( isset( $term_meta['faq_groups'] ) ? $term_meta['faq_groups'] : [] );
             return $faq_group_items;
         }
 

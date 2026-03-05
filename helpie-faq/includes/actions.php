@@ -63,8 +63,12 @@ if (!class_exists('\HelpieFaq\Includes\Actions')) {
 
         public function save_category_taxonomy_custom_fields($term_id)
         {
+            if ( ! isset( $_POST['_inline_edit'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_inline_edit'] ) ), 'inlineeditnonce' ) ) {
+                return;
+            }
+
             if (isset($_POST['order']) && !empty($_POST['order'])) {
-                $order = sanitize_text_field(wp_unslash($_POST['order']));
+                $order = absint($_POST['order']);
                 update_term_meta($term_id, 'order', $order);
             }
         }

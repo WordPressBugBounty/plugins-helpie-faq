@@ -119,7 +119,7 @@ if (!class_exists('\HelpieFaq\Includes\Frontend')) {
                 $content = $excerpt_content . $read_more_link;
             } else {
                 $length = $this->get_excerpt_length();
-                $content = wp_trim_words($content, $length, $read_more_link);
+                $content = $this->trim_content_preserve_links($content, $length, $read_more_link);
             }
             return $content;
         }
@@ -132,6 +132,31 @@ if (!class_exists('\HelpieFaq\Includes\Frontend')) {
             $open_new_window = (isset($this->options['open_new_window']) && $this->options['open_new_window'] == 1) ? 'target="_blank"' : '';
             $read_more_content = '&hellip;<a class="read-more-link" href="' . esc_url($post_link) . '"  ' . $open_new_window . '>' . esc_html($read_more_text) . '</a>';
             return $read_more_content;
+        }
+
+        /**
+         * Trim content to a word limit while preserving <a> tags.
+         * wp_trim_words() strips ALL HTML, so links in excerpts are lost.
+         */
+        public function trim_content_preserve_links($content, $num_words, $more)
+        {
+            // Strip all tags except <a>
+            $content = strip_tags($content, '<a>');
+            $content = trim($content);
+
+            $words = preg_split('/\s+/', $content, $num_words + 1);
+
+            if (count($words) > $num_words) {
+                array_pop($words);
+                $content = implode(' ', $words);
+                // Close any unclosed <a> tags
+                if (substr_count($content, '<a') > substr_count($content, '</a>')) {
+                    $content .= '</a>';
+                }
+                $content .= $more;
+            }
+
+            return $content;
         }
 
         public function get_read_more_content($collections_with_props)
