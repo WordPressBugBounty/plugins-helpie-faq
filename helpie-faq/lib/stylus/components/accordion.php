@@ -62,12 +62,15 @@ if (!class_exists('\Stylus\Components\Accordion')) {
                 $term_id = isset($props[$ii]['term_id']) ? $props[$ii]['term_id'] : '';
                 $anchor_id = 'term-' . $term_id;
                 
-                // Add data-item (slug), data-id (ID), and id attributes to support both anchor formats
+                // Add data-item (slug), data-id (ID), data-slug (canonical slug hash), and id for dual anchor formats
                 $data_item_attr = !empty($url_attribute) ? ' data-item="' . esc_attr($url_attribute) . '"' : '';
                 $data_id_attr = !empty($anchor_id) ? ' data-id="' . esc_attr($anchor_id) . '"' : '';
                 $id_attr = !empty($anchor_id) ? ' id="accordion-header-' . esc_attr($anchor_id) . '"' : '';
-                
-                $html .= "<h3 class='accordion__heading accordion__category'" . $id_attr . $data_item_attr . $data_id_attr . ">" . $title_icon . $title_content . "</h3>";
+                $term_slug = isset($props[$ii]['slug']) ? $props[$ii]['slug'] : '';
+                $canonical_term_slug = !empty($term_slug) ? str_replace(' ', '-', strtolower($term_slug)) : '';
+                $data_slug_attr = !empty($canonical_term_slug) ? ' data-slug="' . esc_attr($canonical_term_slug) . '"' : '';
+
+                $html .= "<h3 class='accordion__heading accordion__category'" . $id_attr . $data_item_attr . $data_id_attr . $data_slug_attr . ">" . $title_icon . $title_content . "</h3>";
                 $children = isset($props[$ii]['children']) ? $props[$ii]['children'] : [];
                 if (empty($children)) {
                     continue;
@@ -183,6 +186,10 @@ if (!class_exists('\Stylus\Components\Accordion')) {
             $content_id = 'accordion-content-' . $id;
             $is_expanded = $show_accordion_body ? 'true' : 'false';
 
+            $post_slug = isset($props['slug']) ? $props['slug'] : '';
+            $canonical_slug = !empty($post_slug) ? str_replace(' ', '-', strtolower($post_slug)) : '';
+            $data_slug_attr = !empty($canonical_slug) ? ' data-slug="' . esc_attr($canonical_slug) . '"' : '';
+
             $html = '<li class="accordion__item ' . esc_attr($is_category) . '">';
             $html .= '<div class="accordion__header ' . esc_attr($accordion__header_classes) . '" 
                 id="' . esc_attr($header_id) . '"
@@ -190,7 +197,7 @@ if (!class_exists('\Stylus\Components\Accordion')) {
                 aria-expanded="' . esc_attr($is_expanded) . '"
                 aria-controls="' . esc_attr($content_id) . '"
                 data-id="' . esc_attr($id) . '" 
-                data-item="' . esc_attr($url_attribute) . '" 
+                data-item="' . esc_attr($url_attribute) . '"' . $data_slug_attr . ' 
                 style="' . $accordion_styles['header_styles'] . '" 
                 data-tags="' . esc_attr($tags) . '"
                 tabindex="0">';

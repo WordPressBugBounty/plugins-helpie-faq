@@ -53,9 +53,14 @@ if (!class_exists('\HelpieFaq\Includes\Query\Sort')) {
         {
             global $wpdb;
             $click_counter_exists = false;
-            $table = $wpdb->prefix . 'postmeta';
-            $query = 'select count(meta_key) as no_of_meta_keys from ' . $table . ' where meta_key="click_counter";';
-            $result = $wpdb->get_row($wpdb->prepare('SELECT COUNT(meta_key) as no_of_meta_keys FROM ' . $table . ' WHERE meta_key = %s', 'click_counter'), 'ARRAY_A');
+            $table  = $wpdb->postmeta;
+            $result = $wpdb->get_row(
+                $wpdb->prepare(
+                    'SELECT COUNT(meta_key) AS no_of_meta_keys FROM ' . $table . ' WHERE meta_key = %s',
+                    'click_counter'
+                ),
+                'ARRAY_A'
+            );
             if (!empty($result['no_of_meta_keys'])) {
                 $click_counter_exists = true;
             }

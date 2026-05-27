@@ -69,22 +69,60 @@ if (!class_exists('\HelpieFaq\Includes\Frontend')) {
 
             } else {
 
-                // Remove Beaver Filter
-                if (class_exists('FLBuilder')) {
-                    remove_filter('the_content', array('FLBuilder', 'render_content'));
-                }
-
-                add_filter('the_content', 'wpautop');
-
                 if (!isset($this->options['integration']) || $this->options['integration'] != 'lms') {
-                    $content = apply_filters('the_content', $content);
-                    /** remove paragraph tags , if that tags are automatically adding by wordpress */
-                    remove_filter('the_content', 'wpautop');
-                }
+                    /**
+                     * The FAQ content here is *partial* content extracted from a post.
+                     * Running the FULL `the_content` filter chain over it lets arbitrary
+                     * third-party filters (email obfuscators especially) corrupt it --
+                     * they leave decoder placeholder tokens that never resolve and render
+                     * as garbled output (GH #706).
+                     *
+                     * Fix: temporarily swap the global `the_content` WP_Hook object for a
+                     * restricted one carrying only WordPress core formatting filters, then
+                     * always restore the original in a finally block. This supersedes the
+                     * old Beaver Builder remove/re-add -- Beaver's filter (like any other
+                     * third-party filter) simply will not be present in the restricted set.
+                     *
+                     * NOTE: $wp_filter['the_content'] holds closures and is NOT
+                     * serializable -- it must be saved/restored by plain reference.
+                     */
+                    global $wp_filter;
 
-                // Re-add Beaver Filter
-                if (class_exists('FLBuilder')) {
-                    add_filter('the_content', array('FLBuilder', 'render_content'));
+                    $saved_the_content = isset($wp_filter['the_content']) ? $wp_filter['the_content'] : null;
+
+                    // Drop the existing hook so only core formatting filters remain.
+                    unset($wp_filter['the_content']);
+
+                    try {
+                        // oEmbed: run BEFORE wpautop/shortcodes so URLs on their own line
+                        // are converted. Matches WP core's wp-includes/embed.php priorities.
+                        if (isset($GLOBALS['wp_embed']) && is_object($GLOBALS['wp_embed'])) {
+                            add_filter('the_content', array($GLOBALS['wp_embed'], 'run_shortcode'), 8);
+                            add_filter('the_content', array($GLOBALS['wp_embed'], 'autoembed'), 8);
+                        }
+
+                        // WordPress core formatting filters (see wp-includes/default-filters.php).
+                        // do_blocks (priority 9) must run so block-authored FAQ answers,
+                        // including dynamic blocks, render correctly.
+                        if (function_exists('do_blocks')) {
+                            add_filter('the_content', 'do_blocks', 9);
+                        }
+                        add_filter('the_content', 'wptexturize');
+                        add_filter('the_content', 'wpautop');
+                        add_filter('the_content', 'shortcode_unautop');
+                        add_filter('the_content', 'prepend_attachment');
+                        add_filter('the_content', 'do_shortcode', 11);
+
+                        $content = apply_filters('the_content', $content);
+                    } finally {
+                        // ALWAYS restore the original global hook, even on exception,
+                        // so other content on the request keeps its filters.
+                        if ($saved_the_content !== null) {
+                            $wp_filter['the_content'] = $saved_the_content;
+                        } else {
+                            unset($wp_filter['the_content']);
+                        }
+                    }
                 }
             }
 

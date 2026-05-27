@@ -33,6 +33,8 @@ if ( !class_exists( '\\Helpie_FAQ' ) ) {
             /*  FAQ Admin Section Initialization Hook */
             add_action( 'admin_init', array($this, 'load_admin_hooks') );
             /*  FAQ Enqueing Script Action hook */
+            add_action( 'wp_enqueue_scripts', array($this, 'register_jquery_trim_compat'), 1 );
+            add_action( 'admin_enqueue_scripts', array($this, 'register_jquery_trim_compat'), 1 );
             add_action( 'wp_enqueue_scripts', array($this, 'register_scripts') );
             add_action( 'wp_enqueue_scripts', array($this, 'enqueue_scripts') );
             /*  FAQ Shortcode */
@@ -559,12 +561,21 @@ if ( !class_exists( '\\Helpie_FAQ' ) ) {
             return ( $toggle_open && $toggle_off ? true : false );
         }
 
+        /**
+         * jQuery 4 removed $.trim; Chosen 1.8.7 still calls it.
+         */
+        public function register_jquery_trim_compat() {
+            wp_enqueue_script( 'jquery' );
+            wp_add_inline_script( 'jquery', 'window.jQuery&&typeof jQuery.trim==="undefined"&&(jQuery.trim=function(t){return t==null?"":String(t).trim();});', 'after' );
+        }
+
         public function enqueuing_the_chosen_style_and_script( $options ) {
             $show_submission = ( isset( $options['show_submission'] ) && $options['show_submission'] == 1 ? true : false );
             $ask_question = ( isset( $options['ask_question'] ) ? $options['ask_question'] : [] );
             if ( !$show_submission || !in_array( 'categories', $ask_question ) ) {
                 return;
             }
+            $this->register_jquery_trim_compat();
             wp_enqueue_style(
                 $this->plugin_domain . '-chosen',
                 HELPIE_FAQ_URL . 'assets/libs/chosen/chosen.css',

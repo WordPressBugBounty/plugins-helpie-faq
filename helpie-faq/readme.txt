@@ -1,10 +1,10 @@
 === Helpie FAQ — Accordion, Docs & Knowledge Base ===
 Donate link: http://helpiewp.com/
 Tags: faq, accordion, menu, docs, knowledge-base 
-Requires at least: 5.4
-Tested up to: 6.9
-Stable tag: 1.48
-Requires PHP: 5.6
+Requires at least: 6.5
+Tested up to: 7.0
+Stable tag: 1.49
+Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Contributors: essekia, pauple, freemius
@@ -204,6 +204,20 @@ It automatically brings the most viewed FAQs first to bring the most useful answ
 14. FAQ Insights to understand customers better (PRO)
 
 == Changelog ==
+
+= 1.49 =
+Compatibility: Tested up to WordPress 7.0; requires WordPress 6.5+ and PHP 7.4+
+Fix: $wpdb->prepare usage in Q&A answers table counts and user-engagement sort query
+Fix: Admin pointers script no longer leaks globals under jQuery 4 strict mode
+Fix: PHP 8.1+ deprecation from null script version on admin pointers enqueue
+Fix: jQuery 4 compatibility shim for Chosen category selects (premium submission)
+Fix: Category accordion no longer expands every child FAQ on first click (#704)
+Fix: Last FAQ in a category is no longer visually clipped (#705)
+Fix: Anchor links work when FAQ URL type is post ID (dual slug + ID format)
+Fix: Email obfuscator plugins no longer corrupt FAQ accordion content (#706)
+Fix: Submission form accordion preview AJAX error on premium sites
+Enhancement: Category headers highlight correctly when a child FAQ is opened
+Accessibility: Keyboard Enter/Space toggles accordion items
 
 = 1.48 =
 Fix: Various bug fixes and improvements
@@ -802,6 +816,11 @@ You can also place the faq’s using the widgets option in the dashboard -> Appe
 * Create any new page or post and you will see an option “Add Helpie shortcode”. 
 * Click that and select the “Helpie FAQ” option in that. 
 * Using our Helpie FAQ builder, you can modify the title, filter the categories to be displayed, set the toggle option and everything else whichever could be done via settings.
+
+**Why does my FAQ URL return a 404?**
+
+* If **Enable - Single FAQ Page** is turned off under Settings → Single FAQ Page, visiting a direct FAQ link returns a 404 by design. FAQs are then shown only via shortcode, block, or widget.
+* Turn the setting on to give each FAQ its own public URL. This is required for Read More links that open the full answer on a separate page.
 
 **Can users submit their questions?**
 

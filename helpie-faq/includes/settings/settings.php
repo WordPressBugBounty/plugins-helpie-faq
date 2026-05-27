@@ -1393,6 +1393,7 @@ if (!class_exists('\HelpieFaq\Includes\Settings\Settings')) {
                     'id' => 'enable_single_faq_page',
                     'type' => 'switcher',
                     'title' => __('Enable - Single FAQ Page', 'helpie-faq'),
+                    'desc' => __('When enabled, each FAQ is reachable at its own URL. When disabled, FAQs are shown only via shortcode/block and visiting a direct FAQ URL returns a 404 by design.', 'helpie-faq'),
                     'default' => true,
                     'class' => 'faq_fields--enable_excerpt',
                 ),

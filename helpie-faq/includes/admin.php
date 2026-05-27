@@ -206,7 +206,7 @@ if (!class_exists('\HelpieFaq\Includes\Admin')) {
             wp_enqueue_style('wp-pointer');
             $js_url = HELPIE_FAQ_URL . 'lib/pointers/pointers.js';
 
-            wp_enqueue_script('hfaq_admin_pointers', $js_url, array('wp-pointer'), null, true);
+            wp_enqueue_script('hfaq_admin_pointers', $js_url, array('wp-pointer'), HELPIE_FAQ_VERSION, true);
             //data to pass to javascript
             $data = array(
                 'next_label' => __('Next'),
