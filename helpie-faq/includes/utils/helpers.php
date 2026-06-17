@@ -215,6 +215,46 @@ if (!class_exists('\HelpieFaq\Includes\Utils\Helpers')) {
         }
 
         /**
+         * Run a WordPress post query without suppressing SQL-clause filters.
+         *
+         * Multilingual plugins such as WPML and Polylang scope posts through
+         * the normal WP_Query clause filters. get_posts() suppresses those
+         * filters by default, so FAQ retrievals must opt back in explicitly.
+         *
+         * @param array $args WP_Query/get_posts arguments.
+         * @return \WP_Post[]|int[] Array of post objects or IDs.
+         */
+        public static function get_filterable_posts($args)
+        {
+            $args['suppress_filters'] = false;
+            return get_posts($args);
+        }
+
+        /**
+         * Add the current multilingual language to term queries when available.
+         *
+         * WordPress core ignores unknown query vars, while multilingual plugins
+         * can consume the lang var to scope taxonomy results.
+         *
+         * @param array $args get_terms() arguments.
+         * @return array
+         */
+        public static function apply_current_language_to_terms_query($args)
+        {
+            $current_language = apply_filters('wpml_current_language', null);
+
+            if (!$current_language && function_exists('pll_current_language')) {
+                $current_language = pll_current_language('slug');
+            }
+
+            if ($current_language) {
+                $args['lang'] = $current_language;
+            }
+
+            return $args;
+        }
+
+        /**
          * Check if an IP address is in CloudFlare's IP ranges
          *
          * @param string $ip IP address to check

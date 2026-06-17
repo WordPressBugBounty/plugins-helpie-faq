@@ -590,6 +590,8 @@
          * @since  2.5.4
          */
         static function clear_force_http_flag() {
+            self::_init();
+
             self::$_options->unset_option( 'api_force_http' );
         }
 

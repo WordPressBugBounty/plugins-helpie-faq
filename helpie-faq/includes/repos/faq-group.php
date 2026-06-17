@@ -194,7 +194,7 @@ if ( !class_exists( '\\HelpieFaq\\Includes\\Repos\\Faq_Group' ) ) {
                     'include_children' => false,
                 )),
             );
-            $posts = get_posts( $post_args );
+            $posts = \HelpieFaq\Includes\Utils\Helpers::get_filterable_posts( $post_args );
             return $posts;
         }
 
@@ -286,7 +286,7 @@ if ( !class_exists( '\\HelpieFaq\\Includes\\Repos\\Faq_Group' ) ) {
                 $post_ids = $this->get_post_ids_by_category_term( $category_term, $term_meta );
                 $posts = array();
                 if ( !empty( $post_ids ) ) {
-                    $posts = get_posts( array(
+                    $posts = \HelpieFaq\Includes\Utils\Helpers::get_filterable_posts( array(
                         'post__in'    => $post_ids,
                         'post_type'   => HELPIE_FAQ_POST_TYPE,
                         'numberposts' => -1,
@@ -338,7 +338,7 @@ if ( !class_exists( '\\HelpieFaq\\Includes\\Repos\\Faq_Group' ) ) {
             if ( empty( $post_ids ) ) {
                 return $pending_post_ids;
             }
-            $posts = get_posts( array(
+            $posts = \HelpieFaq\Includes\Utils\Helpers::get_filterable_posts( array(
                 'post__in'    => $post_ids,
                 'post_type'   => HELPIE_FAQ_POST_TYPE,
                 'numberposts' => -1,

@@ -3,7 +3,7 @@ Donate link: http://helpiewp.com/
 Tags: faq, accordion, menu, docs, knowledge-base 
 Requires at least: 6.5
 Tested up to: 7.0
-Stable tag: 1.49
+Stable tag: 1.50.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -204,6 +204,16 @@ It automatically brings the most viewed FAQs first to bring the most useful answ
 14. FAQ Insights to understand customers better (PRO)
 
 == Changelog ==
+
+= 1.50.1 =
+Fix: Fatal error on plugin activation caused by the hf_fs() Freemius helper loading after the settings screen was built
+
+= 1.50 =
+Fix: FAQs respect the active WPML/Polylang language (#10060)
+Fix: Category headings respect the active WPML/Polylang language
+Fix: Category toggles no longer clip or jump when an FAQ is in multiple categories (#714, #715)
+Fix: Email Encoder Bundle no longer breaks FAQ accordion rendering (#10072)
+Fix: Prevent a possible Freemius SDK null dereference fatal error
 
 = 1.49 =
 Compatibility: Tested up to WordPress 7.0; requires WordPress 6.5+ and PHP 7.4+

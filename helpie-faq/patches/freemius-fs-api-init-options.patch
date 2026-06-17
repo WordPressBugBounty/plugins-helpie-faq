@@ -1,0 +1,26 @@
+Fix: FS_Api::clear_force_http_flag() dereferences a null $_options.
+
+Freemius SDK bug (present through 2.13.1 / master as of 2026-06). The static
+method clear_force_http_flag() calls self::$_options->unset_option() without
+first calling self::_init() to populate $_options, unlike its sibling
+clear_cache() which inits first. When clear_connectivity_info()
+(class-freemius.php) invokes it before any FS_Api::_init() has run -- e.g. a
+connectivity test under WP-CLI / WP-Cron where $_SERVER['HTTP_HOST'] is unset --
+$_options is null and PHP fatals:
+
+    Call to a member function unset_option() on null  (class-fs-api.php:593)
+
+Fix mirrors clear_cache() by calling self::_init() first. Remove once an
+upstream Freemius SDK release includes the fix.
+
+--- a/src/Library/freemius/includes/class-fs-api.php
++++ b/src/Library/freemius/includes/class-fs-api.php
+@@ -590,6 +590,8 @@
+          * @since  2.5.4
+          */
+         static function clear_force_http_flag() {
++            self::_init();
++
+             self::$_options->unset_option( 'api_force_http' );
+         }
+ 

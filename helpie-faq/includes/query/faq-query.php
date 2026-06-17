@@ -37,7 +37,7 @@ if (!class_exists('\HelpieFaq\Includes\Query\Faq_Query')) {
                 }
             }
 
-            $posts = get_posts($wp_query_args);
+            $posts = \HelpieFaq\Includes\Utils\Helpers::get_filterable_posts($wp_query_args);
 
             /**
              * NOTE:- Didn't gets any posts data by using the get_posts() if the meta-query and post__in props are used
@@ -61,7 +61,7 @@ if (!class_exists('\HelpieFaq\Includes\Query\Faq_Query')) {
                     if ($wp_query_args['meta_query']) {
                         unset($wp_query_args['meta_query']);
                     }
-                    $posts = get_posts($wp_query_args);
+                    $posts = \HelpieFaq\Includes\Utils\Helpers::get_filterable_posts($wp_query_args);
                 }
             }
 

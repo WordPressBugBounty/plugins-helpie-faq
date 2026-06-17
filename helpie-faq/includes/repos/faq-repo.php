@@ -133,6 +133,7 @@ if ( !class_exists( '\\HelpieFaq\\Includes\\Repos\\Faq_Repo' ) ) {
                     $term_args['include'] = $term_ids;
                 }
             }
+            $term_args = \HelpieFaq\Includes\Utils\Helpers::apply_current_language_to_terms_query( $term_args );
             // helpie_error_log(' $term_args : ' . print_r($term_args, true));
             $faq_categories = get_terms( $term_args );
             // helpie_error_log(' $faq_categories : ' . print_r($faq_categories, true));
@@ -204,7 +205,7 @@ if ( !class_exists( '\\HelpieFaq\\Includes\\Repos\\Faq_Repo' ) ) {
                 )),
             );
             $post_args = array_merge( $term_args, $post_args );
-            $result = get_posts( $post_args );
+            $result = \HelpieFaq\Includes\Utils\Helpers::get_filterable_posts( $post_args );
             return $result;
         }
 

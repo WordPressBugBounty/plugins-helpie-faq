@@ -4,9 +4,13 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit845aed2b2b0f8108686c9fb85829aaf9
+class ComposerStaticInit097f19eeba07fc31bd759151aca191a2
 {
     public static $prefixLengthsPsr4 = array (
+        'c' => 
+        array (
+            'cweagans\\Composer\\' => 18,
+        ),
         'P' => 
         array (
             'Pauple\\Pluginator\\' => 18,
@@ -18,6 +22,10 @@ class ComposerStaticInit845aed2b2b0f8108686c9fb85829aaf9
     );
 
     public static $prefixDirsPsr4 = array (
+        'cweagans\\Composer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/cweagans/composer-patches/src',
+        ),
         'Pauple\\Pluginator\\' => 
         array (
             0 => __DIR__ . '/..' . '/pauple/pluginator/src',
@@ -35,9 +43,9 @@ class ComposerStaticInit845aed2b2b0f8108686c9fb85829aaf9
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit845aed2b2b0f8108686c9fb85829aaf9::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit845aed2b2b0f8108686c9fb85829aaf9::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit845aed2b2b0f8108686c9fb85829aaf9::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit097f19eeba07fc31bd759151aca191a2::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit097f19eeba07fc31bd759151aca191a2::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit097f19eeba07fc31bd759151aca191a2::$classMap;
 
         }, null, ClassLoader::class);
     }

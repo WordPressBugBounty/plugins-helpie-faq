@@ -175,7 +175,7 @@ if (!class_exists('\HelpieFaq\Includes\Modules\Faq_Rest_Api\Faq_Rest_Api')) {
                 'post_type' => $post_type,
             );
 
-            $posts = get_posts($args);
+            $posts = \HelpieFaq\Includes\Utils\Helpers::get_filterable_posts($args);
 
             return $posts;
         }
