@@ -16,9 +16,6 @@ if ( !class_exists( '\\Helpie_FAQ' ) ) {
             global $Helpie_Faq_Collections;
             $this->setup_autoload();
             $this->load_libraries();
-            // Define hf_fs() now that the Freemius SDK (fs_dynamic_init) is loaded by
-            // load_libraries(). Settings (built below) calls hf_fs() synchronously, so the
-            // helper must exist before that point.
             require_once HELPIE_FAQ_PATH . 'lib/freemius-integrator.php';
             $this->load_faq_functions();
             $this->plugin_domain = HELPIE_FAQ_DOMAIN;

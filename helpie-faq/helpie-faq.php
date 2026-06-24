@@ -5,7 +5,7 @@ Plugin Name: Helpie FAQ
 Plugin URI: http://helpiewp.com/helpie-faq/
 Description: Awesome WordPress FAQ plugin
 Author: HelpieWP
-Version: 1.50.1
+Version: 1.51
 Requires at least: 6.5
 Requires PHP: 7.4
 Author URI: http://helpiewp.com
@@ -26,7 +26,7 @@ if (function_exists('hf_fs')) {
 } else {
     if (!class_exists('Helpie_FAQ_Plugin')) {
 
-        define('HELPIE_FAQ_VERSION', '1.50.1');
+        define('HELPIE_FAQ_VERSION', '1.51');
         define('HELPIE_FAQ_DOMAIN', 'helpie-faq');
         define('HELPIE_FAQ_POST_TYPE', 'helpie_faq');
         define('HELPIE_MENU_POST_TYPE', 'helpie_menu');
@@ -58,8 +58,6 @@ if (function_exists('hf_fs')) {
 
             private function __construct()
             {
-                // helpie_faq_activation() loads plugin.php, which loads the Freemius SDK and
-                // the hf_fs() helper (lib/freemius-integrator.php) in the correct order.
                 $this->helpie_faq_activation();
             }
 

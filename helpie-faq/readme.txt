@@ -3,7 +3,7 @@ Donate link: http://helpiewp.com/
 Tags: faq, accordion, menu, docs, knowledge-base 
 Requires at least: 6.5
 Tested up to: 7.0
-Stable tag: 1.50.1
+Stable tag: 1.51
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -205,8 +205,9 @@ It automatically brings the most viewed FAQs first to bring the most useful answ
 
 == Changelog ==
 
-= 1.50.1 =
-Fix: Fatal error on plugin activation caused by the hf_fs() Freemius helper loading after the settings screen was built
+= 1.51 =
+Fix: FAQ accordion items no longer show theme-added list markers or black dots
+Hardening: Isolated FAQ schema state in regression coverage to prevent cross-test leakage
 
 = 1.50 =
 Fix: FAQs respect the active WPML/Polylang language (#10060)
