@@ -5,7 +5,7 @@ Plugin Name: Helpie FAQ
 Plugin URI: http://helpiewp.com/helpie-faq/
 Description: Awesome WordPress FAQ plugin
 Author: HelpieWP
-Version: 1.51
+Version: 1.52
 Requires at least: 6.5
 Requires PHP: 7.4
 Author URI: http://helpiewp.com
@@ -26,7 +26,9 @@ if (function_exists('hf_fs')) {
 } else {
     if (!class_exists('Helpie_FAQ_Plugin')) {
 
-        define('HELPIE_FAQ_VERSION', '1.51');
+        define('HELPIE_FAQ_VERSION', '1.52');
+        define('HELPIE_FAQ_MINIMUM_PHP_VERSION', '7.4');
+        define('HELPIE_FAQ_MINIMUM_WP_VERSION', '6.5');
         define('HELPIE_FAQ_DOMAIN', 'helpie-faq');
         define('HELPIE_FAQ_POST_TYPE', 'helpie_faq');
         define('HELPIE_MENU_POST_TYPE', 'helpie_menu');
@@ -63,9 +65,9 @@ if (function_exists('hf_fs')) {
 
             public function helpie_faq_activation()
             {
-                if (!version_compare(PHP_VERSION, '5.4', '>=')) {
+                if (!version_compare(PHP_VERSION, HELPIE_FAQ_MINIMUM_PHP_VERSION, '>=')) {
                     add_action('admin_notices', [$this, 'helpie_faq_fail_php_version']);
-                } elseif (!version_compare(get_bloginfo('version'), '4.5', '>=')) {
+                } elseif (!version_compare(get_bloginfo('version'), HELPIE_FAQ_MINIMUM_WP_VERSION, '>=')) {
                     add_action('admin_notices', [$this, 'helpie_faq_fail_wp_version']);
                 } else {
                     require HELPIE_FAQ_PATH . 'includes/plugin.php';
@@ -80,7 +82,7 @@ if (function_exists('hf_fs')) {
             public function helpie_faq_fail_php_version()
             {
                 /* translators: %s: PHP version */
-                $message = sprintf(esc_html__('Helpie FAQ requires PHP version %s+, plugin is currently NOT ACTIVE.', 'helpie-faq'), '5.4');
+                $message = sprintf(esc_html__('Helpie FAQ requires PHP version %s+, plugin is currently NOT ACTIVE.', 'helpie-faq'), HELPIE_FAQ_MINIMUM_PHP_VERSION);
                 $html_message = sprintf('<div class="error">%s</div>', wpautop($message));
                 echo wp_kses_post($html_message);
             }
@@ -93,7 +95,7 @@ if (function_exists('hf_fs')) {
             public function helpie_faq_fail_wp_version()
             {
                 /* translators: %s: WP version */
-                $message = sprintf(esc_html__('Helpie FAQ requires WordPress version %s+. Because you are using an earlier version, the plugin is currently NOT ACTIVE.', 'helpie-faq'), '4.5');
+                $message = sprintf(esc_html__('Helpie FAQ requires WordPress version %s+. Because you are using an earlier version, the plugin is currently NOT ACTIVE.', 'helpie-faq'), HELPIE_FAQ_MINIMUM_WP_VERSION);
                 $html_message = sprintf('<div class="error">%s</div>', wpautop($message));
                 echo wp_kses_post($html_message);
             }

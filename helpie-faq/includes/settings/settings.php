@@ -122,7 +122,7 @@ if (!class_exists('\HelpieFaq\Includes\Settings\Settings')) {
                     'id' => 'usersubmisson',
                     'title' => __('User Submission', 'helpie-faq'),
                     'icon' => 'fas fa-sign-out-alt',
-                    'fields' => $this->submission_fields(),
+                    'fields' => $this->submission_fields($prefix),
                 )
 
             );
@@ -453,7 +453,7 @@ if (!class_exists('\HelpieFaq\Includes\Settings\Settings')) {
             return $options;
         }
 
-        public function submission_fields()
+        public function submission_fields($prefix)
         {
 
             $pro_feature_sub_title = $this->pro_feature_sub_title();
@@ -596,6 +596,13 @@ if (!class_exists('\HelpieFaq\Includes\Settings\Settings')) {
 
             $options = $this->submit_form_buttons($options, $incr);
             // error_log('[$options] : ' . print_r($options, true));
+
+            $submission_styles_enabled = $is_premium
+                && $this->are_style_settings_enabled($prefix, array('show_submission'));
+
+            if (!$submission_styles_enabled) {
+                $options = $this->remove_style_output_metadata($options);
+            }
 
             return $options;
         }
@@ -1319,6 +1326,55 @@ if (!class_exists('\HelpieFaq\Includes\Settings\Settings')) {
             );
 
             $fields = $this->add_premium_field_notice($fields, 'styles');
+
+            if (!$this->are_style_settings_enabled($prefix, array('enable_faq_styles'))) {
+                $fields = $this->remove_style_output_metadata($fields);
+            }
+
+            return $fields;
+        }
+
+        private function are_style_settings_enabled($prefix, $setting_ids)
+        {
+            $settings = get_option($prefix, array());
+
+            if (!is_array($settings)) {
+                return false;
+            }
+
+            foreach ($setting_ids as $setting_id) {
+                if (!isset($settings[$setting_id])
+                    || !filter_var($settings[$setting_id], FILTER_VALIDATE_BOOLEAN)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private function remove_style_output_metadata($fields)
+        {
+            foreach ($fields as &$field) {
+                unset($field['output'], $field['output_mode'], $field['output_important']);
+
+                if (!empty($field['fields']) && is_array($field['fields'])) {
+                    $field['fields'] = $this->remove_style_output_metadata($field['fields']);
+                }
+
+                foreach (array('accordions', 'tabs') as $groups_key) {
+                    if (empty($field[$groups_key]) || !is_array($field[$groups_key])) {
+                        continue;
+                    }
+
+                    foreach ($field[$groups_key] as &$group) {
+                        if (!empty($group['fields']) && is_array($group['fields'])) {
+                            $group['fields'] = $this->remove_style_output_metadata($group['fields']);
+                        }
+                    }
+                    unset($group);
+                }
+            }
+            unset($field);
 
             return $fields;
         }

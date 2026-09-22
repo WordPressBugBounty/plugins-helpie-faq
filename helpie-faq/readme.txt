@@ -3,7 +3,7 @@ Donate link: http://helpiewp.com/
 Tags: faq, accordion, menu, docs, knowledge-base 
 Requires at least: 6.5
 Tested up to: 7.0
-Stable tag: 1.51
+Stable tag: 1.52
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -167,13 +167,13 @@ It automatically brings the most viewed FAQs first to bring the most useful answ
 
 = Minimum Requirements =
 
-* WordPress 5.4 or greater
-* PHP version 5.6 or greater
+* WordPress 6.5 or greater
+* PHP version 7.4 or greater
 * MySQL version 5.6 or greater
 
 = We recommend your host supports: =
 
-* PHP version 7.0 or greater
+* PHP version 8.2 or greater
 * MySQL version 5.6 or greater
 * WordPress Memory limit of 64 MB or greater (128 MB or higher is preferred)
 
@@ -204,6 +204,13 @@ It automatically brings the most viewed FAQs first to bring the most useful answ
 14. FAQ Insights to understand customers better (PRO)
 
 == Changelog ==
+
+= 1.52 =
+Fix: FAQ styles now stay disabled when you turn them off
+Fix: Improved styling for a smoother experience on free sites
+Compatibility: Better support for WordPress 6.5 and newer, with PHP 7.4 and newer
+Improvement: More reliable plugin installation and updates
+Fix: Plugin scripts and styles now load correctly after installation
 
 = 1.51 =
 Fix: FAQ accordion items no longer show theme-added list markers or black dots
