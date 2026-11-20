@@ -18,7 +18,7 @@ if (!class_exists('\HelpieFaq\Includes\Frontend')) {
             $pattern = '/(https?:\/\/www\.youtube\.com\/watch\?v=[\w-]+)/i';
 
             // Replace each YouTube URL with the oEmbed HTML with specified size
-            $content = preg_replace_callback($pattern, function ($matches) {
+            $embed_url = function ($matches) {
                 // Get the URL from the matches
                 $url = esc_url($matches[1]);
 
@@ -43,9 +43,46 @@ if (!class_exists('\HelpieFaq\Includes\Frontend')) {
 
                 // Return the original URL if embedding failed
                 return $matches[1];
-            }, $content);
+            };
 
-            return $content;
+            return $this->map_answer_text($content, static function ($text, $inside_link) use ($pattern, $embed_url) {
+                return $inside_link ? $text : preg_replace_callback($pattern, $embed_url, $text);
+            });
+        }
+
+        private function map_answer_text($content, $callback)
+        {
+            $inside_link = false;
+            $parts = wp_html_split($content);
+            foreach ($parts as &$part) {
+                if (preg_match('~^<(/?)a(?=[\s>])~i', $part, $tag)) {
+                    $inside_link = $tag[1] === '';
+                } elseif (strpos($part, '<') !== 0) {
+                    $part = $callback($part, $inside_link);
+                }
+            }
+            unset($part);
+
+            return implode('', $parts);
+        }
+
+        private function autoembed_unlinked_urls($content, $wp_embed)
+        {
+            // Core autoembed also recognizes URLs on their own line inside a
+            // link label. Hide their schemes from just that formatting pass.
+            if (stripos($content, '<a') === false) {
+                return $wp_embed->autoembed($content);
+            }
+
+            $placeholder = '__helpie_faq_link_scheme__';
+            while (strpos($content, $placeholder) !== false) {
+                $placeholder .= '_';
+            }
+            $masked = $this->map_answer_text($content, static function ($text, $inside_link) use ($placeholder) {
+                return $inside_link ? str_replace('://', $placeholder, $text) : $text;
+            });
+
+            return str_replace($placeholder, '://', $wp_embed->autoembed($masked));
         }
 
         public function get_the_faq_content($collections_with_props)
@@ -98,7 +135,10 @@ if (!class_exists('\HelpieFaq\Includes\Frontend')) {
                         // are converted. Matches WP core's wp-includes/embed.php priorities.
                         if (isset($GLOBALS['wp_embed']) && is_object($GLOBALS['wp_embed'])) {
                             add_filter('the_content', array($GLOBALS['wp_embed'], 'run_shortcode'), 8);
-                            add_filter('the_content', array($GLOBALS['wp_embed'], 'autoembed'), 8);
+                            $wp_embed = $GLOBALS['wp_embed'];
+                            add_filter('the_content', function ($answer) use ($wp_embed) {
+                                return $this->autoembed_unlinked_urls($answer, $wp_embed);
+                            }, 8);
                         }
 
                         // WordPress core formatting filters (see wp-includes/default-filters.php).

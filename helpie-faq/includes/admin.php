@@ -75,17 +75,8 @@ if (!class_exists('\HelpieFaq\Includes\Admin')) {
         public function enqueue_scripts()
         {
             $screen = get_current_screen();
-            if ( $screen ) {
-                $is_helpie_page = in_array( $screen->id, array(
-                    'helpie_faq', 'edit-helpie_faq', 'edit-helpie_faq_category',
-                    'edit-helpie_faq_group', 'helpie_menu', 'edit-helpie_menu',
-                    'helpie_faq_page_helpie-review-settings', 'helpie_faq_page_helpie-faq-onboarding',
-                ), true )
-                    || ( isset( $screen->post_type ) && in_array( $screen->post_type, array( 'helpie_faq', 'helpie_menu' ), true ) );
-
-                if ( ! $is_helpie_page ) {
-                    return;
-                }
+            if ( ! $this->is_helpie_admin_screen( $screen ) ) {
+                return;
             }
 
             wp_enqueue_style($this->plugin_domain . '-bundle-styles', HELPIE_FAQ_URL . 'assets/bundles/admin.app.css', array(), $this->version, 'all');
@@ -247,6 +238,10 @@ if (!class_exists('\HelpieFaq\Includes\Admin')) {
 
         public function enqueue_helpie_menu_collection()
         {
+            $screen = get_current_screen();
+            if ( ! $this->is_helpie_menu_screen( $screen ) ) {
+                return;
+            }
 
             // error_log('enqueue_helpie_menu_collection');
             $post_id = isset($_GET['post']) ? (int) sanitize_text_field(wp_unslash($_GET['post'])) : 0;
@@ -276,6 +271,11 @@ if (!class_exists('\HelpieFaq\Includes\Admin')) {
         }
         public function enqueue_faq_group_collection()
         {
+            $screen = get_current_screen();
+            if ( ! $screen || 'edit-helpie_faq_group' !== $screen->id ) {
+                return;
+            }
+
             $taxonomy = isset($_GET['taxonomy']) ? sanitize_text_field(wp_unslash($_GET['taxonomy'])) : '';
             if ($taxonomy != 'helpie_faq_group') {
                 return;
@@ -300,12 +300,49 @@ if (!class_exists('\HelpieFaq\Includes\Admin')) {
                     'page_action' => $page_action,
                     'product_categories' => $this->get_product_categories(),
                     'post_types' => $this->get_post_types(),
-                    'faq_group_edit_url' => wp_json_encode(admin_url("term.php?taxonomy=helpie_faq_group&tag_ID={$tag_ID}&post_type=helpie_faq")),
+                    // Plain URL string: wp_localize_script() already JSON-encodes the payload.
+                    'faq_group_edit_url' => $tag_ID > 0 ? esc_url_raw(admin_url("term.php?taxonomy=helpie_faq_group&tag_ID={$tag_ID}&post_type=helpie_faq")) : '',
                 ),
             );
             wp_localize_script(HELPIE_FAQ_DOMAIN . '-bundle-admin-scripts', 'helpie_faq', $enqueue_data);
             wp_enqueue_style('wp-color-picker');
             wp_enqueue_script($this->plugin_domain . '-bundle-admin-scripts', HELPIE_FAQ_URL . 'assets/bundles/admin.app.js', array('wp-color-picker'), false, true);
+        }
+
+        /**
+         * Determine whether the current admin screen belongs to Helpie FAQ.
+         *
+         * @param object|null $screen Current WordPress screen.
+         * @return bool
+         */
+        private function is_helpie_admin_screen( $screen = null )
+        {
+            if ( ! $screen || ! isset( $screen->id ) ) {
+                return false;
+            }
+
+            return in_array( $screen->id, array(
+                'helpie_faq', 'edit-helpie_faq', 'edit-helpie_faq_category',
+                'edit-helpie_faq_group', 'helpie_menu', 'edit-helpie_menu',
+                'helpie_menu_page_tablesome_admin_page', 'helpie_faq_page_helpie-faq-insights',
+                'helpie_faq_page_helpie-review-settings', 'helpie_faq_page_helpie-faq-onboarding',
+            ), true )
+                || ( isset( $screen->post_type ) && in_array( $screen->post_type, array( 'helpie_faq', 'helpie_menu' ), true ) );
+        }
+
+        /**
+         * Determine whether the current admin screen belongs to Helpie Menu.
+         *
+         * @param object|null $screen Current WordPress screen.
+         * @return bool
+         */
+        private function is_helpie_menu_screen( $screen = null )
+        {
+            return $this->is_helpie_admin_screen( $screen )
+                && (
+                    in_array( $screen->id, array( 'helpie_menu', 'edit-helpie_menu', 'helpie_menu_page_tablesome_admin_page' ), true )
+                    || ( isset( $screen->post_type ) && 'helpie_menu' === $screen->post_type )
+                );
         }
 
         public function get_post_types()

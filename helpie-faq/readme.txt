@@ -3,7 +3,7 @@ Donate link: http://helpiewp.com/
 Tags: faq, accordion, menu, docs, knowledge-base 
 Requires at least: 6.5
 Tested up to: 7.0
-Stable tag: 1.52
+Stable tag: 1.53
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -204,6 +204,14 @@ It automatically brings the most viewed FAQs first to bring the most useful answ
 14. FAQ Insights to understand customers better (PRO)
 
 == Changelog ==
+
+= 1.53 =
+Fix: The Add FAQ button opens the submission form when submissions are enabled through a shortcode.
+Fix: YouTube fallback links added to FAQ answers remain clickable.
+Fix: Restored FAQ submissions from the frontend form in Pro.
+Fix: Resolved an error on WordPress admin screens outside Helpie FAQ.
+Improvement: Limits admin notification emails during periods of high submission activity. FAQ submissions continue to be saved.
+Improvement: The submission form now shows clearer messages when information needs to be corrected.
 
 = 1.52 =
 Fix: FAQ styles now stay disabled when you turn them off
